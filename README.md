@@ -47,11 +47,10 @@ Most retail trading folklore dies the second it gets scouted by 1-tick fills, re
 
 ---
 
-## Use It With AI (Gemini 4 Neon)
+## Use It With AI
 
-1. Go to [gemini.google.com](https://gemini.google.com) and sign in with a Google account.
-2. Pick **Gemini 4 Neon** from the model menu at the top. It needs a Google AI Pro plan, which has a free trial. The free model works too, just less sharp.
-3. Copy a prompt below and paste it into Gemini. For the first three, paste the strategy code underneath it (open the `.pine` or `.cs` file, click the copy icon). The website does this for you: https://open-source-edge.github.io/everything/#ai
+1. Open your AI. Recommended: **Gemini 4 Neon** at [gemini.google.com](https://gemini.google.com), which needs a Google AI Pro plan (free trial available). Any chat AI works.
+2. Copy a prompt below and paste it in. For the first three, paste the strategy code underneath it (open the `.pine` or `.cs` file, click the copy icon). The website does this for you: https://open-source-edge.github.io/everything/#ai
 
 **Explain it** (plain-English rules, the idea behind them and the risks)
 
