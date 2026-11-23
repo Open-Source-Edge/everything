@@ -60,7 +60,7 @@ etMin    = minute(time_close, "America/New_York")
 etTotalM = etHour * 60 + etMin
 dayKey   = etYear * 10000 + etMonth * 100 + etDay
 
-isOneMin    = timeframe.period == "1"
+isValidTf   = timeframe.isintraday and (timeframe.multiplier == 1 or timeframe.multiplier == 5)
 isRth       = etTotalM > (9 * 60 + 30) and etTotalM <= (16 * 60)
 isNewRthDay = isRth and not isRth[1] and (na(dayKey[1]) or dayKey != dayKey[1] or etTotalM <= 9 * 60 + 35)
 
@@ -99,7 +99,7 @@ regimeAllowed = isPosGamma and not isFomcDay and not vix9dBlocked
 checkTargetMin = checkHourEt * 60 + checkMinEt
 exitTargetMin  = exitHourEt * 60 + exitMinEt
 
-isCheckBar = isOneMin and isRth and etTotalM == checkTargetMin
+isCheckBar = isValidTf and isRth and etTotalM == checkTargetMin
 isExitBar  = isRth and etTotalM >= exitTargetMin
 
 rawStopDist = not na(atr15m) ? (stopAtrMult * atr15m) : na
@@ -131,24 +131,24 @@ plot(rthVwap, "RTH VWAP (Must Close Above at 13:00 ET)", color = color.new(#2DD4
 plot(activeStop, "Hard Stop (2x ATR15)", color = color.new(#F87171, 15), linewidth = 2, style = plot.style_linebr)
 plotshape(longSignal, title = "Shield Battery Buy Signal", style = shape.triangleup, location = location.belowbar, color = #2DD4BF, size = size.small, text = "BUY 13:00", textcolor = #F3F5F8)
 
-// --- Dummy-Proof Plain-English Status Panel ---
-var table tbl = table.new(position.top_right, 2, 6, bgcolor = color.new(#0B0E14, 8), border_color = #1E293B, border_width = 1)
+// --- Dummy-Proof Plain-English Status Panel (Readable Size) ---
+var table tbl = table.new(position.top_right, 2, 6, bgcolor = color.new(#0B0E14, 6), border_color = #334155, border_width = 1, frame_color = #334155, frame_width = 1)
 if showTable and barstate.islast
-    actionTxt = not isOneMin ? "USE 1-MIN CHART" : (strategy.position_size > 0 ? "IN LONG (FLAT 15:55)" : (tradedToday ? "DONE FOR TODAY" : (isFomcDay ? "SKIP TODAY (FOMC)" : (vix9dBlocked ? "SKIP (VOL STRESS)" : (not isPosGamma ? "SKIP (NEG GAMMA)" : (isRth and etTotalM > checkTargetMin ? "NO SIGNAL TODAY" : "WATCH 13:00 ET"))))))
-    actionCol = not isOneMin ? #F87171 : (strategy.position_size > 0 or actionTxt == "WATCH 13:00 ET" ? #2DD4BF : #94A3B8)
+    actionTxt = not isValidTf ? "USE 1M OR 5M CHART" : (strategy.position_size > 0 ? "IN LONG (FLAT 15:55)" : (tradedToday ? "DONE FOR TODAY" : (isFomcDay ? "SKIP TODAY (FOMC)" : (vix9dBlocked ? "SKIP (VOL STRESS)" : (not isPosGamma ? "SKIP (NEG GAMMA)" : (isRth and etTotalM > checkTargetMin ? "NO SIGNAL TODAY" : "WATCH 13:00 ET"))))))
+    actionCol = not isValidTf ? #F87171 : (strategy.position_size > 0 or actionTxt == "WATCH 13:00 ET" ? #2DD4BF : #94A3B8)
     modeTxt   = isManualMode ? "MANUAL FLIP" : (na(vixRatio) ? "N/A" : str.tostring(vixRatio, "#.##") + " (VIX/3M)")
     stopTxt   = not na(activeStop) ? str.tostring(activeStop, format.mintick) : (na(stopDist) ? "N/A" : str.tostring(stopDist, "#.##") + " pts")
     stopLbl   = not na(activeStop) ? "Active Hard Stop" : "Est. Stop (2x ATR)"
 
-    table.cell(tbl, 0, 0, "OpenSourceEdge", text_color = #F3F5F8, text_size = size.small, text_halign = text.align_left)
-    table.cell(tbl, 1, 0, "Shield Battery", text_color = #2DD4BF, text_size = size.small, text_halign = text.align_right)
-    table.cell(tbl, 0, 1, "Today's Action", text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
-    table.cell(tbl, 1, 1, actionTxt, text_color = actionCol, text_size = size.tiny, text_halign = text.align_right)
-    table.cell(tbl, 0, 2, "Dealer Gamma", text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
-    table.cell(tbl, 1, 2, isPosGamma ? "POSITIVE (SHIELDS ON)" : "NEGATIVE (OFFLINE)", text_color = isPosGamma ? #2DD4BF : #F87171, text_size = size.tiny, text_halign = text.align_right)
-    table.cell(tbl, 0, 3, "Regime Input", text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
-    table.cell(tbl, 1, 3, modeTxt, text_color = #F3F5F8, text_size = size.tiny, text_halign = text.align_right)
-    table.cell(tbl, 0, 4, stopLbl, text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
-    table.cell(tbl, 1, 4, stopTxt, text_color = not na(activeStop) ? #F87171 : #F3F5F8, text_size = size.tiny, text_halign = text.align_right)
-    table.cell(tbl, 0, 5, "Rule", text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
-    table.cell(tbl, 1, 5, "MNQ 1m · Close > VWAP", text_color = #CBD5E1, text_size = size.tiny, text_halign = text.align_right)
+    table.cell(tbl, 0, 0, "OpenSourceEdge", text_color = #F3F5F8, text_size = size.large, text_halign = text.align_left)
+    table.cell(tbl, 1, 0, "Shield Battery", text_color = #2DD4BF, text_size = size.large, text_halign = text.align_right)
+    table.cell(tbl, 0, 1, "Today's Action", text_color = #94A3B8, text_size = size.normal, text_halign = text.align_left)
+    table.cell(tbl, 1, 1, actionTxt, text_color = actionCol, text_size = size.normal, text_halign = text.align_right)
+    table.cell(tbl, 0, 2, "Dealer Gamma", text_color = #94A3B8, text_size = size.normal, text_halign = text.align_left)
+    table.cell(tbl, 1, 2, isPosGamma ? "POSITIVE (SHIELDS ON)" : "NEGATIVE (OFFLINE)", text_color = isPosGamma ? #2DD4BF : #F87171, text_size = size.normal, text_halign = text.align_right)
+    table.cell(tbl, 0, 3, "Regime Input", text_color = #94A3B8, text_size = size.normal, text_halign = text.align_left)
+    table.cell(tbl, 1, 3, modeTxt, text_color = #F3F5F8, text_size = size.normal, text_halign = text.align_right)
+    table.cell(tbl, 0, 4, stopLbl, text_color = #94A3B8, text_size = size.normal, text_halign = text.align_left)
+    table.cell(tbl, 1, 4, stopTxt, text_color = not na(activeStop) ? #F87171 : #F3F5F8, text_size = size.normal, text_halign = text.align_right)
+    table.cell(tbl, 0, 5, "Rule", text_color = #94A3B8, text_size = size.normal, text_halign = text.align_left)
+    table.cell(tbl, 1, 5, "MNQ 1m/5m · > VWAP", text_color = #CBD5E1, text_size = size.normal, text_halign = text.align_right)
