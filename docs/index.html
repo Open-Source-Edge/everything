@@ -24,7 +24,6 @@
       --dim: #64748B;
       --teal: #2DD4BF;
       --red: #F87171;
-      --amber: #EAB308;
       --display: "Chakra Petch", "IBM Plex Sans", sans-serif;
       --sans: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       --mono: "IBM Plex Mono", "SF Mono", Menlo, Consolas, monospace;
@@ -604,24 +603,6 @@
     .orders li.live a { text-decoration: none; }
     .orders li.live a:hover .ord-name { color: var(--teal); }
     .ord-what { font-size: 14px; color: var(--muted); margin-top: 1px; }
-    .race {
-      font-family: var(--mono);
-      font-size: 11px;
-      margin-left: 7px;
-      white-space: nowrap;
-    }
-    .race::before {
-      content: "";
-      display: inline-block;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: currentColor;
-      margin-right: 4px;
-      vertical-align: 1px;
-    }
-    .race.p { color: var(--teal); }
-    .race.t { color: var(--amber); }
     .ord-st { font-family: var(--mono); font-size: 12px; color: var(--dim); flex: none; }
     .orders li.live .ord-st { color: var(--teal); }
 
@@ -756,7 +737,7 @@
       <section id="shield-battery">
         <div class="sec-head">
           <h2>Shield Battery</h2>
-          <span class="sec-tag">01 · Protoss</span>
+          <span class="sec-tag">01</span>
         </div>
         <p class="lead">One 1:00 PM ET Nasdaq entry, taken only when options dealers are long gamma.</p>
 
@@ -2172,17 +2153,17 @@ My idea:</pre>
           <li class="live">
             <div class="ord-l">
               <span class="ord-n">01</span>
-              <a href="#shield-battery"><span class="ord-name">Shield Battery</span><span class="race p">Protoss</span><div class="ord-what">Long-gamma afternoon drift on MNQ</div></a>
+              <a href="#shield-battery"><span class="ord-name">Shield Battery</span><div class="ord-what">Long-gamma afternoon drift on MNQ</div></a>
             </div>
             <span class="ord-st">Live</span>
           </li>
-          <li><div class="ord-l"><span class="ord-n">02</span><div><span class="ord-name">Stimpack</span><span class="race t">Terran</span><div class="ord-what">First five minutes, one-way open</div></div></div><span class="ord-st">Queued</span></li>
-          <li><div class="ord-l"><span class="ord-n">03</span><div><span class="ord-name">Siege Tank</span><span class="race t">Terran</span><div class="ord-what">Noise band breakout</div></div></div><span class="ord-st">Queued</span></li>
-          <li><div class="ord-l"><span class="ord-n">04</span><div><span class="ord-name">Blink Stalker</span><span class="race p">Protoss</span><div class="ord-what">Fast morning MNQ and YM scalp</div></div></div><span class="ord-st">Queued</span></li>
-          <li><div class="ord-l"><span class="ord-n">05</span><div><span class="ord-name">Yamato Cannon</span><span class="race t">Terran</span><div class="ord-what">Treasury post-auction, 1:10 PM</div></div></div><span class="ord-st">Queued</span></li>
-          <li><div class="ord-l"><span class="ord-n">06</span><div><span class="ord-name">MULE Drop</span><span class="race t">Terran</span><div class="ord-what">Turn-of-month flow</div></div></div><span class="ord-st">Queued</span></li>
-          <li><div class="ord-l"><span class="ord-n">07</span><div><span class="ord-name">Psionic Storm</span><span class="race p">Protoss</span><div class="ord-what">Short-gamma last hour</div></div></div><span class="ord-st">Queued</span></li>
-          <li><div class="ord-l"><span class="ord-n">08</span><div><span class="ord-name">Widow Mine</span><span class="race t">Terran</span><div class="ord-what">QQQ call-euphoria short</div></div></div><span class="ord-st">Queued</span></li>
+          <li><div class="ord-l"><span class="ord-n">02</span><div><span class="ord-name">Stimpack</span><div class="ord-what">First five minutes, one-way open</div></div></div><span class="ord-st">Queued</span></li>
+          <li><div class="ord-l"><span class="ord-n">03</span><div><span class="ord-name">Siege Tank</span><div class="ord-what">Noise band breakout</div></div></div><span class="ord-st">Queued</span></li>
+          <li><div class="ord-l"><span class="ord-n">04</span><div><span class="ord-name">Blink Stalker</span><div class="ord-what">Fast morning MNQ and YM scalp</div></div></div><span class="ord-st">Queued</span></li>
+          <li><div class="ord-l"><span class="ord-n">05</span><div><span class="ord-name">Yamato Cannon</span><div class="ord-what">Treasury post-auction, 1:10 PM</div></div></div><span class="ord-st">Queued</span></li>
+          <li><div class="ord-l"><span class="ord-n">06</span><div><span class="ord-name">MULE Drop</span><div class="ord-what">Turn-of-month flow</div></div></div><span class="ord-st">Queued</span></li>
+          <li><div class="ord-l"><span class="ord-n">07</span><div><span class="ord-name">Psionic Storm</span><div class="ord-what">Short-gamma last hour</div></div></div><span class="ord-st">Queued</span></li>
+          <li><div class="ord-l"><span class="ord-n">08</span><div><span class="ord-name">Widow Mine</span><div class="ord-what">QQQ call-euphoria short</div></div></div><span class="ord-st">Queued</span></li>
         </ol>
       </section>
 
