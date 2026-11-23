@@ -54,7 +54,9 @@
     .wrap { max-width: 900px; margin: 0 auto; padding: 0 48px; }
     .hero { padding: 104px 0 80px; }
     h1 { font-size: clamp(44px, 6.4vw, 76px); line-height: 1.02; letter-spacing: -0.01em; font-weight: 700; max-width: 17ch; text-wrap: balance; }
-    .lede { margin-top: 24px; font-size: 21px; color: var(--muted); max-width: 40ch; }
+    .lede { margin-top: 24px; font-size: 21px; color: var(--muted); max-width: 46ch; }
+    .lede a { color: var(--text); text-decoration: underline; text-decoration-color: var(--teal); text-underline-offset: 4px; }
+    .lede a:hover { color: var(--teal); }
     .hud { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 10px 32px; font-size: 17px; color: var(--muted); }
     .hud span { display: inline-flex; align-items: center; gap: 10px; }
     .hud i { width: 8px; height: 8px; display: inline-block; transform: rotate(45deg); background: var(--teal); }
@@ -224,7 +226,7 @@
     <div class="wrap">
       <header class="hero">
         <h1>Real edges, proven on real data, free to copy.</h1>
-        <p class="lede">NinjaTrader 8 and TradingView code for every strategy that held up.</p>
+        <p class="lede">Backtested on 8 years of data, verified on real ticks, fees and slippage included. <a href="#shield-battery">The proof is public.</a> Check it yourself.</p>
         <div class="hud">
           <span><i></i><strong>1B+</strong> real ticks</span>
           <span><i class="g"></i><strong>32M</strong> options rows</span>
