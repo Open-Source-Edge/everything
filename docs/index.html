@@ -549,21 +549,18 @@
 
     .chart-box {
       position: relative;
-      background: var(--well);
-      border: 1px solid var(--line);
-      border-radius: 8px;
-      padding: 12px 12px 8px;
+      padding: 4px 0 0;
     }
-    .chart-box + .chart-box { margin-top: 12px; }
+    .chart-box + .chart-box {
+      margin-top: 18px;
+      padding-top: 16px;
+      border-top: 1px solid var(--line);
+    }
     .chart-title {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
       font-family: var(--mono);
       font-size: 12px;
       color: var(--dim);
       margin-bottom: 6px;
-      padding: 0 4px;
     }
     .chart-svg { width: 100%; height: auto; display: block; overflow: visible; }
 
@@ -1124,77 +1121,61 @@
 
       <section id="backtest">
         <div class="sec-head">
-          <h2>Backtest &amp; proof</h2>
-          <span class="pill">1 MNQ · 1t slippage · $1.24 RT fees</span>
+          <h2>Backtest</h2>
         </div>
-        <p class="lead">Every trade from May 2019 to November 2026, strictly causal with zero lookahead.</p>
+        <p class="lead">1 MNQ, 2019–2026. 1-tick slippage and $1.24 round-trip fees included.</p>
 
         <div class="kpi-grid">
-          <div class="kpi"><span class="kv up">+$9,711</span><span class="kl">8-year net P&amp;L</span></div>
+          <div class="kpi"><span class="kv up">+$9,711</span><span class="kl">Net P&amp;L</span></div>
           <div class="kpi"><span class="kv">1.37</span><span class="kl">Profit factor</span></div>
-          <div class="kpi"><span class="kv">57.5%</span><span class="kl">Win rate (630 trades)</span></div>
+          <div class="kpi"><span class="kv">57.5%</span><span class="kl">Win rate</span></div>
           <div class="kpi"><span class="kv dn">-$1,096</span><span class="kl">Max drawdown</span></div>
-          <div class="kpi"><span class="kv">1.12</span><span class="kl">Sharpe ratio</span></div>
-          <div class="kpi"><span class="kv up">7 / 8</span><span class="kl">7 straight green yrs</span></div>
+          <div class="kpi"><span class="kv">1.12</span><span class="kl">Sharpe</span></div>
+          <div class="kpi"><span class="kv up">7 / 8</span><span class="kl">Green years</span></div>
         </div>
 
         <div class="panel" id="bt-panel">
           <div class="panel-bar">
             <div class="tabs" role="tablist">
-              <button class="tab-btn active" type="button" role="tab" data-bt-tab="charts">Equity &amp; Yearly</button>
-              <button class="tab-btn" type="button" role="tab" data-bt-tab="splits">Splits &amp; 1-Tick Audit</button>
-              <button class="tab-btn" type="button" role="tab" data-bt-tab="trades">All 630 Trades</button>
+              <button class="tab-btn active" type="button" role="tab" data-bt-tab="charts">Charts</button>
+              <button class="tab-btn" type="button" role="tab" data-bt-tab="splits">Splits &amp; 1-Tick</button>
+              <button class="tab-btn" type="button" role="tab" data-bt-tab="trades">Trades (630)</button>
             </div>
-            <span class="mono" style="font-size:12.5px; color:var(--dim);" id="bt-status">Loading verified dataset...</span>
+            <div class="legend-items" id="bt-legend" style="font-size:13px; color:var(--muted);">
+              <span class="legend-item"><i class="swatch" style="background:var(--teal);"></i>Above Flip</span>
+              <span class="legend-item"><i class="swatch" style="background:var(--red);"></i>Below Flip</span>
+            </div>
           </div>
 
           <div class="panel-body">
             <div class="tab-pane active" id="pane-charts">
-              <div class="chart-legend">
-                <div class="legend-items">
-                  <span class="legend-item"><i class="swatch" style="background:var(--teal);"></i>Above Gamma Flip (Shields ON: +$9,711)</span>
-                  <span class="legend-item"><i class="swatch" style="background:var(--red);"></i>Below Gamma Flip (Placebo: -$1,730)</span>
-                </div>
-                <span class="mono" style="font-size:12px; color:var(--dim);">Hover chart to inspect dates</span>
-              </div>
-
               <div class="chart-box" id="eq-box">
-                <div class="chart-title">
-                  <span>CUMULATIVE NET P&amp;L ($ USD, 1 MNQ)</span>
-                  <span>DEV 2019-2022 · BLIND OOS 2023-2025 · VIRGIN 2026</span>
-                </div>
                 <div class="chart-tip" id="eq-tip"></div>
                 <svg class="chart-svg" id="eq-svg" viewBox="0 0 860 270" preserveAspectRatio="xMidYMid meet"></svg>
               </div>
 
               <div class="chart-box">
-                <div class="chart-title">
-                  <span>SHIELD BATTERY DRAWDOWN ($ USD)</span>
-                  <span>MAX DD -$1,095.80</span>
-                </div>
+                <div class="chart-title">Drawdown</div>
                 <svg class="chart-svg" id="dd-svg" viewBox="0 0 860 92" preserveAspectRatio="xMidYMid meet"></svg>
               </div>
 
               <div class="chart-box">
-                <div class="chart-title">
-                  <span>YEARLY NET P&amp;L ($ USD): ABOVE FLIP VS. BELOW FLIP</span>
-                  <span>7 CONSECUTIVE GREEN YEARS (2020-2026)</span>
-                </div>
+                <div class="chart-title">Yearly P&amp;L</div>
                 <svg class="chart-svg" id="yr-svg" viewBox="0 0 860 170" preserveAspectRatio="xMidYMid meet"></svg>
               </div>
             </div>
 
             <div class="tab-pane" id="pane-splits">
               <div class="sub-block">
-                <div class="sub-title">3-Way Temporal Split (Frozen Rules)</div>
+                <div class="sub-title">Splits</div>
                 <div class="tbl-wrap">
                   <table class="data">
                     <thead>
                       <tr>
                         <th>Period</th>
                         <th class="r">Trades</th>
-                        <th class="r">Net P&amp;L (1t)</th>
-                        <th class="r">Profit Factor</th>
+                        <th class="r">Net P&amp;L</th>
+                        <th class="r">PF</th>
                         <th class="r">Win Rate</th>
                         <th class="r">Max DD</th>
                       </tr>
@@ -1205,7 +1186,7 @@
               </div>
 
               <div class="sub-block">
-                <div class="sub-title">Dealer Gamma Regime Comparison (Same 1:00 PM Rule)</div>
+                <div class="sub-title">By Regime</div>
                 <div class="tbl-wrap">
                   <table class="data">
                     <thead>
@@ -1216,7 +1197,7 @@
                         <th class="r">PF</th>
                         <th class="r">Win Rate</th>
                         <th class="r">Max DD</th>
-                        <th class="r">2026 Virgin</th>
+                        <th class="r">2026</th>
                       </tr>
                     </thead>
                     <tbody id="regime-tbody"></tbody>
@@ -1225,31 +1206,28 @@
               </div>
 
               <div class="sub-block">
-                <div class="sub-title">Real 1-Tick Replay Parity Audit (221 Matched Trades, 2023-2025)</div>
+                <div class="sub-title">1-Tick Replay (221 trades, 2023–2025)</div>
                 <div class="audit-grid">
                   <div class="audit-card">
-                    <div class="al">1-Minute Bar Backtest</div>
+                    <div class="al">1m Bars</div>
                     <div class="av num">+$1,736</div>
-                    <div class="as">Baseline 1m fills</div>
                   </div>
                   <div class="audit-card">
-                    <div class="al">Real 1-Tick Replay (1t slip)</div>
+                    <div class="al">Real 1-Tick (1t slip)</div>
                     <div class="av num up">+$2,190</div>
-                    <div class="as">Beat bar backtest</div>
                   </div>
                   <div class="audit-card">
-                    <div class="al">Real Live Bid-Ask Spread</div>
+                    <div class="al">Live Spread (1.42t)</div>
                     <div class="av num up">+$2,144</div>
-                    <div class="as">1.42t avg spread · 0.983 corr</div>
+                    <div class="as">0.983 corr</div>
                   </div>
                 </div>
                 <div class="robust-row">
-                  <span>2-tick slip: <b>+$9,091 (PF 1.35)</b></span>
-                  <span>Ex-top 1% days: <b>+$6,639</b></span>
-                  <span>Bootstrap p: <b>0.0013</b></span>
-                  <span>Avg hold: <b>158 min</b></span>
-                  <span>Max loss streak: <b>7</b></span>
-                  <span>Morning bot corr: <b>0.001</b></span>
+                  <span>2t slip: <b>+$9,091</b></span>
+                  <span>Ex-top 1%: <b>+$6,639</b></span>
+                  <span>p = <b>0.0013</b></span>
+                  <span>Max streak: <b>7 losses</b></span>
+                  <span>Morning corr: <b>0.001</b></span>
                 </div>
               </div>
             </div>
@@ -1275,12 +1253,12 @@
                 </select>
                 <select id="f-outcome" aria-label="Filter by outcome">
                   <option value="all">All trades</option>
-                  <option value="win">Winners only</option>
-                  <option value="loss">Losers only</option>
+                  <option value="win">Winners</option>
+                  <option value="loss">Losers</option>
                 </select>
                 <select id="f-sort" aria-label="Sort trades">
-                  <option value="newest">Newest first</option>
-                  <option value="oldest">Oldest first</option>
+                  <option value="newest">Newest</option>
+                  <option value="oldest">Oldest</option>
                   <option value="best">Largest win</option>
                   <option value="worst">Largest loss</option>
                 </select>
@@ -1295,7 +1273,7 @@
                       <th>Date</th>
                       <th>Period</th>
                       <th>Contract</th>
-                      <th class="r">Stop (pts)</th>
+                      <th class="r">Stop</th>
                       <th class="r">Net P&amp;L</th>
                       <th class="r">R</th>
                       <th class="r">Cum P&amp;L</th>
@@ -1318,23 +1296,22 @@
         </div>
 
         <div class="dl-bar">
-          <a class="btn sm" href="data/ep01/trades.csv" download="shield-battery-trades-2019-2026.csv">Download trades.csv (630 rows)</a>
-          <a class="btn sm" href="data/ep01/metrics.json" download="shield-battery-metrics.json">Download metrics.json</a>
-          <a class="btn sm" href="https://github.com/Open-Source-Edge/everything/tree/main/episodes/ep01-dealer-gamma/backtest" target="_blank" rel="noopener">Inspect raw files on GitHub</a>
+          <a class="btn sm" href="data/ep01/trades.csv" download="shield-battery-trades-2019-2026.csv">trades.csv</a>
+          <a class="btn sm" href="data/ep01/metrics.json" download="shield-battery-metrics.json">metrics.json</a>
+          <a class="btn sm" href="https://github.com/Open-Source-Edge/everything/tree/main/episodes/ep01-dealer-gamma/backtest" target="_blank" rel="noopener">GitHub</a>
         </div>
       </section>
 
       <section id="code">
         <div class="sec-head">
-          <h2>Get the code</h2>
-          <span class="pill">TradingView v6 · NinjaTrader 8 C#</span>
+          <h2>Code</h2>
         </div>
-        <p class="lead">MIT-licensed source ready to paste and backtest. No indicators, no lock-in.</p>
+        <p class="lead">Copy into TradingView or NinjaTrader 8.</p>
 
         <div class="panel">
           <div class="panel-bar">
             <div class="tabs" role="tablist">
-              <button class="tab-btn active" type="button" role="tab" data-code-tab="pine">TradingView · Pine Script v6</button>
+              <button class="tab-btn active" type="button" role="tab" data-code-tab="pine">TradingView · Pine v6</button>
               <button class="tab-btn" type="button" role="tab" data-code-tab="cs">NinjaTrader 8 · C#</button>
             </div>
             <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -1345,8 +1322,7 @@
 
           <div class="tab-pane active" id="code-pane-pine">
             <div class="code-note">
-              <span>Chart: <code>MNQ1!</code> on <code>1m</code> or <code>5m</code> · Default Auto Free Proxy works out of the box</span>
-              <span>Phone pings: Alerts clock → <code>OSE Shield Battery</code> → Order fills &amp; alert() calls</span>
+              <span><code>MNQ1!</code> 1m or 5m · Alerts: <code>OSE Shield Battery</code> → Order fills &amp; alert() calls</span>
             </div>
             <pre class="code-pre" id="pine-src">//@version=6
 // ============================================================================
@@ -1515,14 +1491,14 @@ if showTable and barstate.islast
     table.cell(tbl, 1, 5, &quot;MNQ 1m/5m · &gt; VWAP&quot;, text_color = #CBD5E1, text_size = size.normal, text_halign = text.align_right)</pre>
             <div class="code-foot">
               <span class="mono">LongGammaDrift_OpenSource.pine</span>
-              <button class="link-btn" type="button" data-expand="pine-src">Expand full file</button>
+              <button class="link-btn" type="button" data-expand="pine-src">Expand</button>
             </div>
           </div>
 
           <div class="tab-pane" id="code-pane-cs">
             <div class="code-note">
-              <span>Chart: <code>MNQ</code> 1-Minute ETH · Regime CSV: <code>Documents\NinjaTrader 8\OpenSourceEdge\daily_regime.csv</code></span>
-              <a href="data/ep01/sample_daily_regime.csv" download="sample_daily_regime.csv">Download sample_daily_regime.csv</a>
+              <span><code>MNQ</code> 1m ETH · <code>Documents\NinjaTrader 8\OpenSourceEdge\daily_regime.csv</code></span>
+              <a href="data/ep01/sample_daily_regime.csv" download="sample_daily_regime.csv">sample_daily_regime.csv</a>
             </div>
             <pre class="code-pre" id="cs-src">// ============================================================================
 // OpenSourceEdge - Build Order #01: Shield Battery (Long-Gamma Drift, NT8)
@@ -2507,7 +2483,7 @@ namespace NinjaTrader.NinjaScript.Strategies.OpenSourceEdgeLgCore
 // CORE-END</pre>
             <div class="code-foot">
               <span class="mono">LongGammaDrift_OpenSource.cs</span>
-              <button class="link-btn" type="button" data-expand="cs-src">Expand full file</button>
+              <button class="link-btn" type="button" data-expand="cs-src">Expand</button>
             </div>
           </div>
         </div>
@@ -2615,9 +2591,8 @@ My idea:</pre>
       <section id="orders">
         <div class="sec-head">
           <h2>Build orders</h2>
-          <span class="pill">1 released · 7 queued</span>
         </div>
-        <p class="lead">One verified strategy per episode, with dual-platform code and the full backtest log.</p>
+        <p class="lead">One strategy per episode. Seven queued.</p>
 
         <ol class="orders-grid">
           <li class="order-item live">
@@ -2822,7 +2797,7 @@ My idea:</pre>
         btn.addEventListener("click", function () {
           var pre = document.getElementById(btn.dataset.expand);
           var expanded = pre.classList.toggle("expanded");
-          btn.textContent = expanded ? "Collapse" : "Expand full file";
+          btn.textContent = expanded ? "Collapse" : "Expand";
         });
       });
 
@@ -2836,6 +2811,7 @@ My idea:</pre>
       });
 
       /* Backtest tabs */
+      var btLegend = document.getElementById("bt-legend");
       document.querySelectorAll("[data-bt-tab]").forEach(function (btn) {
         btn.addEventListener("click", function () {
           var k = btn.dataset.btTab;
@@ -2843,6 +2819,7 @@ My idea:</pre>
           ["charts", "splits", "trades"].forEach(function (p) {
             document.getElementById("pane-" + p).classList.toggle("active", p === k);
           });
+          if (btLegend) btLegend.style.display = k === "charts" ? "" : "none";
         });
       });
 
@@ -3200,16 +3177,13 @@ My idea:</pre>
         renderSplitsAndRegime(metrics);
         allTrades = parseCsv(csvText);
         applyTradeFilters();
-        document.getElementById("bt-status").textContent = "630 verified trades · 2019-05-16 to 2026-11-11";
         var params = new URLSearchParams(window.location.search);
         var tab = params.get("tab");
         if (tab) {
           var btn = document.querySelector('[data-bt-tab="' + tab + '"]');
           if (btn) btn.click();
         }
-      }).catch(function () {
-        document.getElementById("bt-status").textContent = "Live data loads on GitHub Pages (download CSV/JSON below)";
-      });
+      }).catch(function () {});
     })();
   </script>
 </body>
