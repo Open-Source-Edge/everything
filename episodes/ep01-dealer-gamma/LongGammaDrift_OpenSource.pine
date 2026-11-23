@@ -17,7 +17,7 @@
 //    before 09:30 ET using pre-market SPX 14-DTE Gamma Flip data.
 // ============================================================================
 
-strategy("OpenSourceEdge: Shield Battery (Long-Gamma 13:00)", shorttitle = "OSE Shield Battery", overlay = true, initial_capital = 50000, default_qty_type = strategy.fixed, default_qty_value = 1, commission_type = strategy.commission.cash_per_contract, commission_value = 0.62, slippage = 1, calc_on_every_tick = false, process_orders_on_close = false)
+strategy("OpenSourceEdge: Shield Battery (Long-Gamma 13:00)", shorttitle = "OSE Shield Battery", overlay = true, initial_capital = 50000, default_qty_type = strategy.fixed, default_qty_value = 1, margin_long = 0, margin_short = 0, commission_type = strategy.commission.cash_per_contract, commission_value = 0.62, slippage = 1, calc_on_every_tick = false, process_orders_on_close = false)
 
 // --- Inputs ---
 grpReg = "1. Dealer Gamma Regime"
@@ -126,10 +126,10 @@ if strategy.position_size > 0 and isExitBar
 if strategy.position_size == 0 and not longSignal
     activeStop := na
 
-// --- Clean Dark-Mode Visuals ---
-plot(rthVwap, "RTH VWAP (Must Close Above at 13:00 ET)", color = color.new(#2DD4BF, 20), linewidth = 2, style = plot.style_linebr)
-plot(activeStop, "Hard Stop (2x ATR15)", color = color.new(#F87171, 15), linewidth = 2, style = plot.style_linebr)
-plotshape(longSignal, title = "Shield Battery Buy Signal", style = shape.triangleup, location = location.belowbar, color = #2DD4BF, size = size.small, text = "BUY 13:00", textcolor = #F3F5F8)
+// --- Clean Visuals (Readable on Both Light & Dark Themes) ---
+plot(rthVwap, "RTH VWAP (Must Close Above at 13:00 ET)", color = color.new(#0D9488, 10), linewidth = 2, style = plot.style_linebr)
+plot(activeStop, "Hard Stop (2x ATR15)", color = color.new(#EF4444, 0), linewidth = 2, style = plot.style_linebr)
+plotshape(longSignal, title = "Shield Battery Buy Signal", style = shape.labelup, location = location.belowbar, color = #0D9488, size = size.normal, text = "BUY 13:00", textcolor = color.white)
 
 // --- Dummy-Proof Plain-English Status Panel (Readable Size) ---
 var table tbl = table.new(position.top_right, 2, 6, bgcolor = color.new(#0B0E14, 6), border_color = #334155, border_width = 1, frame_color = #334155, frame_width = 1)
