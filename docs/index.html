@@ -522,6 +522,8 @@
       transition: background 0.14s, color 0.14s, border-color 0.14s;
     }
     .tab-btn:hover { color: var(--text); background: var(--surface); }
+    .tab-btn:focus { outline: none; }
+    .tab-btn:focus-visible { outline: 2px solid var(--teal); outline-offset: 2px; }
     .tab-btn.active {
       color: var(--text);
       background: var(--surface-2);
@@ -1138,7 +1140,7 @@
           <div class="panel-bar">
             <div class="tabs" role="tablist">
               <button class="tab-btn active" type="button" role="tab" data-bt-tab="charts">Charts</button>
-              <button class="tab-btn" type="button" role="tab" data-bt-tab="splits">Splits &amp; 1-Tick</button>
+              <button class="tab-btn" type="button" role="tab" data-bt-tab="splits">Proof &amp; Checks</button>
               <button class="tab-btn" type="button" role="tab" data-bt-tab="trades">Trades (630)</button>
             </div>
             <div class="legend-items" id="bt-legend" style="font-size:13px; color:var(--muted);">
@@ -1167,17 +1169,16 @@
 
             <div class="tab-pane" id="pane-splits">
               <div class="sub-block">
-                <div class="sub-title">Splits</div>
+                <div class="sub-title">Did it work on unseen years?</div>
                 <div class="tbl-wrap">
                   <table class="data">
                     <thead>
                       <tr>
                         <th>Period</th>
                         <th class="r">Trades</th>
-                        <th class="r">Net P&amp;L</th>
-                        <th class="r">PF</th>
+                        <th class="r">Net Profit</th>
                         <th class="r">Win Rate</th>
-                        <th class="r">Max DD</th>
+                        <th class="r">Worst Drop</th>
                       </tr>
                     </thead>
                     <tbody id="splits-tbody"></tbody>
@@ -1186,17 +1187,16 @@
               </div>
 
               <div class="sub-block">
-                <div class="sub-title">By Regime</div>
+                <div class="sub-title">Does the gamma filter actually matter?</div>
                 <div class="tbl-wrap">
                   <table class="data">
                     <thead>
                       <tr>
-                        <th>Regime</th>
+                        <th>Setup</th>
                         <th class="r">Trades</th>
-                        <th class="r">8-Yr Net</th>
-                        <th class="r">PF</th>
+                        <th class="r">8-Yr Profit</th>
                         <th class="r">Win Rate</th>
-                        <th class="r">Max DD</th>
+                        <th class="r">Worst Drop</th>
                         <th class="r">2026</th>
                       </tr>
                     </thead>
@@ -1206,28 +1206,26 @@
               </div>
 
               <div class="sub-block">
-                <div class="sub-title">1-Tick Replay (221 trades, 2023–2025)</div>
+                <div class="sub-title">Did it hold up on real tick fills?</div>
                 <div class="audit-grid">
                   <div class="audit-card">
-                    <div class="al">1m Bars</div>
+                    <div class="al">Normal 1m backtest</div>
                     <div class="av num">+$1,736</div>
                   </div>
                   <div class="audit-card">
-                    <div class="al">Real 1-Tick (1t slip)</div>
+                    <div class="al">Real tick-by-tick replay</div>
                     <div class="av num up">+$2,190</div>
                   </div>
                   <div class="audit-card">
-                    <div class="al">Live Spread (1.42t)</div>
+                    <div class="al">Live bid-ask spread</div>
                     <div class="av num up">+$2,144</div>
-                    <div class="as">0.983 corr</div>
                   </div>
                 </div>
-                <div class="robust-row">
-                  <span>2t slip: <b>+$9,091</b></span>
-                  <span>Ex-top 1%: <b>+$6,639</b></span>
-                  <span>p = <b>0.0013</b></span>
-                  <span>Max streak: <b>7 losses</b></span>
-                  <span>Morning corr: <b>0.001</b></span>
+                <div class="robust-row" style="justify-content:space-between;">
+                  <span>Double slippage: <b>+$9,091</b></span>
+                  <span>Without top 1%: <b>+$6,639</b></span>
+                  <span>Worst losing streak: <b>7</b></span>
+                  <span>Chance it's luck: <b>0.13%</b></span>
                 </div>
               </div>
             </div>
@@ -1236,9 +1234,9 @@
               <div class="filter-bar">
                 <select id="f-period" aria-label="Filter by period">
                   <option value="all">All periods</option>
-                  <option value="DEV (2019-2022)">DEV (2019-2022)</option>
-                  <option value="Blind OOS (2023-2025)">Blind OOS (2023-2025)</option>
-                  <option value="Virgin (2026)">Virgin (2026)</option>
+                  <option value="DEV (2019-2022)">Built on (2019–2022)</option>
+                  <option value="Blind OOS (2023-2025)">Unseen (2023–2025)</option>
+                  <option value="Virgin (2026)">New (2026)</option>
                 </select>
                 <select id="f-year" aria-label="Filter by year">
                   <option value="all">All years</option>
@@ -2911,9 +2909,9 @@ My idea:</pre>
           }
         });
 
-        out.push('<text x="' + (PL + 8) + '" y="' + (PT + 13) + '" fill="#64748B" font-family="IBM Plex Mono, monospace" font-size="10.5">DEV</text>');
-        out.push('<text x="' + (xOos + 8) + '" y="' + (PT + 13) + '" fill="#2DD4BF" fill-opacity="0.7" font-family="IBM Plex Mono, monospace" font-size="10.5">BLIND OOS</text>');
-        out.push('<text x="' + (xVir + 6) + '" y="' + (PT + 13) + '" fill="#2DD4BF" font-family="IBM Plex Mono, monospace" font-size="10.5">VIRGIN 26</text>');
+        out.push('<text x="' + (PL + 8) + '" y="' + (PT + 13) + '" fill="#64748B" font-family="IBM Plex Mono, monospace" font-size="10.5">BUILT ON</text>');
+        out.push('<text x="' + (xOos + 8) + '" y="' + (PT + 13) + '" fill="#2DD4BF" fill-opacity="0.75" font-family="IBM Plex Mono, monospace" font-size="10.5">UNSEEN YEARS</text>');
+        out.push('<text x="' + (xVir + 6) + '" y="' + (PT + 13) + '" fill="#2DD4BF" font-family="IBM Plex Mono, monospace" font-size="10.5">2026 NEW</text>');
 
         /* Below Gamma Flip placebo line */
         var negPts = ["M" + xOf(parseDate(neg[0].d)).toFixed(1) + "," + y0.toFixed(1)];
@@ -3046,9 +3044,9 @@ My idea:</pre>
       function renderSplitsAndRegime(metrics) {
         var sp = metrics.splits;
         var sRows = [
-          ["DEV (2019–2022)", sp.dev_2019_2022],
-          ["Blind OOS (2023–2025)", sp.blind_oos_2023_2025],
-          ["Virgin Holdout (2026)", sp.virgin_holdout_2026]
+          ["Built on (2019–2022)", sp.dev_2019_2022],
+          ["Unseen years (2023–2025)", sp.blind_oos_2023_2025],
+          ["Brand-new year (2026)", sp.virgin_holdout_2026]
         ];
         document.getElementById("splits-tbody").innerHTML = sRows.map(function (item) {
           var d = item[1];
@@ -3056,18 +3054,21 @@ My idea:</pre>
             '<td class="strong">' + item[0] + '</td>' +
             '<td class="r num">' + d.trades + '</td>' +
             '<td class="r num up">' + fmtUsd(d.net_pnl_1t_usd, true) + '</td>' +
-            '<td class="r num">' + d.profit_factor.toFixed(2) + '</td>' +
             '<td class="r num">' + d.win_rate_pct.toFixed(1) + '%</td>' +
             '<td class="r num dn">' + fmtUsd(d.max_drawdown_usd, false) + '</td>' +
             '</tr>';
         }).join("");
 
+        var regimeLabels = [
+          "Filter ON (Positive Gamma)",
+          "No Filter (Every Day)",
+          "Filter OFF (Negative Gamma)"
+        ];
         document.getElementById("regime-tbody").innerHTML = (metrics.regime_comparison || []).map(function (r, idx) {
           return '<tr class="' + (idx === 0 ? 'hl' : '') + '">' +
-            '<td class="strong">' + r.regime + '</td>' +
+            '<td class="strong">' + (regimeLabels[idx] || r.regime) + '</td>' +
             '<td class="r num">' + r.trades.toLocaleString("en-US") + '</td>' +
             '<td class="r num ' + (r.net_pnl_1t_usd >= 0 ? 'up' : 'dn') + '">' + fmtUsd(r.net_pnl_1t_usd, true) + '</td>' +
-            '<td class="r num">' + r.profit_factor.toFixed(2) + '</td>' +
             '<td class="r num">' + r.win_rate_pct.toFixed(1) + '%</td>' +
             '<td class="r num dn">' + fmtUsd(r.max_drawdown_usd, false) + '</td>' +
             '<td class="r num ' + (r.virgin_2026_usd >= 0 ? 'up' : 'dn') + '">' + fmtUsd(r.virgin_2026_usd, true) + '</td>' +
@@ -3139,12 +3140,17 @@ My idea:</pre>
         var start = (page - 1) * PAGE_SIZE;
         var slice = filteredTrades.slice(start, start + PAGE_SIZE);
 
+        var periodShort = {
+          "DEV (2019-2022)": "Built on",
+          "Blind OOS (2023-2025)": "Unseen",
+          "Virgin (2026)": "2026 New"
+        };
         document.getElementById("trades-tbody").innerHTML = slice.map(function (t) {
           var cls = t.net_pnl_1t >= 0 ? "up" : "dn";
           return '<tr>' +
             '<td class="num">' + t.trade_num + '</td>' +
             '<td class="num strong">' + t.date + '</td>' +
-            '<td>' + t.period + '</td>' +
+            '<td>' + (periodShort[t.period] || t.period) + '</td>' +
             '<td class="num">' + t.contract + '</td>' +
             '<td class="r num">' + t.stop_points.toFixed(2) + '</td>' +
             '<td class="r num ' + cls + '">' + fmtUsd2(t.net_pnl_1t) + '</td>' +
