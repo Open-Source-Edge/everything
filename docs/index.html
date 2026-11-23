@@ -267,18 +267,17 @@
 // ============================================================================
 // Author:  @OpenSourceEdge
 // License: MIT (Free to use, modify, fork, and backtest)
-// Chart:   MNQ1! (or NQ1!) on 1-Minute timeframe
+// Chart:   MNQ1! (or NQ1!) on the 1-Minute timeframe
 // Scouted on 1B+ real ticks &amp; 32M options rows. Strictly causal. No map hacks.
 //
-// TWO REGIME MODES:
-// 1. &quot;Auto Free Proxy (VIX/VIX3M)&quot; [Default for Instant Backtesting]:
-//    Uses strictly causal prior-day CBOE:VIX / CBOE:VIX3M &lt; 0.98 (plus optional
-//    VIX9D/VIX &lt; 1.05 veto) right inside TradingView so you can backtest with
-//    zero external files. Note: the primary 8-year research used strike-level
-//    SPX 14-DTE Gamma Flip (32M OPRA rows).
-// 2. &quot;Live Manual Gamma Flip&quot; [Recommended for Daily Live Alerts]:
-//    Toggle Positive Gamma Today before 09:30 ET. Fires clean 13:00 ET entry
-//    + hard stop alerts and 15:55 ET flat alerts for 10-second prop clicks.
+// QUICK START (BEGINNERS):
+// 1. Open MNQ1! on a 1-Minute chart and add this script.
+// 2. Default mode (&quot;Auto Free Proxy&quot;) works immediately with zero setup.
+// 3. To get phone pings at 13:00 ET (entry + exact stop) and 15:55 ET (flat):
+//    Alerts clock -&gt; Condition: OSE Shield Battery -&gt; Order fills and alert()
+//    function calls -&gt; Create.
+// 4. Optional Pro Mode (&quot;Live Manual Gamma Flip&quot;): toggle Positive Gamma Today
+//    before 09:30 ET using pre-market SPX 14-DTE Gamma Flip data.
 // ============================================================================
 
 strategy(&quot;OpenSourceEdge: Shield Battery (Long-Gamma 13:00)&quot;, shorttitle = &quot;OSE Shield Battery&quot;, overlay = true, initial_capital = 50000, default_qty_type = strategy.fixed, default_qty_value = 1, commission_type = strategy.commission.cash_per_contract, commission_value = 0.62, slippage = 1, calc_on_every_tick = false, process_orders_on_close = false)
@@ -302,7 +301,7 @@ maxStopPoints  = input.float(200.0, &quot;Max Stop Cap (Points, 0 = Off)&quot;, 
 skipFomc       = input.bool(true, &quot;Skip Scheduled FOMC Days (2024-2026)&quot;, group = grpSig)
 
 grpUi = &quot;3. Display&quot;
-showTable      = input.bool(true, &quot;Show Status Panel&quot;, group = grpUi)
+showTable      = input.bool(true, &quot;Show Plain-English Status Panel&quot;, group = grpUi)
 
 // --- Strictly Causal Prior-Day CBOE Term Structure (Zero Lookahead) ---
 vixPrev   = request.security(&quot;CBOE:VIX&quot;,   &quot;D&quot;, close[1], gaps = barmerge.gaps_off, lookahead = barmerge.lookahead_on)
@@ -324,6 +323,7 @@ etMin    = minute(time_close, &quot;America/New_York&quot;)
 etTotalM = etHour * 60 + etMin
 dayKey   = etYear * 10000 + etMonth * 100 + etDay
 
+isOneMin    = timeframe.period == &quot;1&quot;
 isRth       = etTotalM &gt; (9 * 60 + 30) and etTotalM &lt;= (16 * 60)
 isNewRthDay = isRth and not isRth[1] and (na(dayKey[1]) or dayKey != dayKey[1] or etTotalM &lt;= 9 * 60 + 35)
 
@@ -352,8 +352,9 @@ if isRth
 rthVwap = (isRth and cumV &gt; 0) ? (cumPV / cumV) : na
 
 // --- Regime Qualification ---
+isManualMode  = regimeMode == &quot;Live Manual Gamma Flip&quot;
 proxyPosGamma = not na(vixRatio) and vixRatio &lt; vixRatioMax
-isPosGamma    = regimeMode == &quot;Live Manual Gamma Flip&quot; ? manualPosGamma : proxyPosGamma
+isPosGamma    = isManualMode ? manualPosGamma : proxyPosGamma
 vix9dBlocked  = useVix9dVeto and not na(vix9dRatio) and vix9dRatio &gt;= vix9dMax
 regimeAllowed = isPosGamma and not isFomcDay and not vix9dBlocked
 
@@ -361,7 +362,7 @@ regimeAllowed = isPosGamma and not isFomcDay and not vix9dBlocked
 checkTargetMin = checkHourEt * 60 + checkMinEt
 exitTargetMin  = exitHourEt * 60 + exitMinEt
 
-isCheckBar = isRth and etTotalM == checkTargetMin
+isCheckBar = isOneMin and isRth and etTotalM == checkTargetMin
 isExitBar  = isRth and etTotalM &gt;= exitTargetMin
 
 rawStopDist = not na(atr15m) ? (stopAtrMult * atr15m) : na
@@ -378,7 +379,7 @@ if longSignal
     tradedToday := true
     strategy.entry(&quot;LG Long&quot;, strategy.long, comment = &quot;Shield Battery 13:00&quot;)
     strategy.exit(&quot;LG Stop&quot;, from_entry = &quot;LG Long&quot;, stop = stopPrice)
-    alert(&quot;OpenSourceEdge Shield Battery LONG: &quot; + syminfo.ticker + &quot; at &quot; + str.tostring(close, format.mintick) + &quot; | Hard Stop: &quot; + str.tostring(stopPrice, format.mintick) + &quot; | Flat 15:55 ET&quot;, alert.freq_once_per_bar_close)
+    alert(&quot;OpenSourceEdge Shield Battery BUY 13:00: &quot; + syminfo.ticker + &quot; at &quot; + str.tostring(close, format.mintick) + &quot; | Hard Stop: &quot; + str.tostring(stopPrice, format.mintick) + &quot; (&quot; + str.tostring(stopDist, &quot;#.##&quot;) + &quot; pts) | Flat 15:55 ET&quot;, alert.freq_once_per_bar_close)
 
 if strategy.position_size &gt; 0 and isExitBar
     strategy.close(&quot;LG Long&quot;, comment = &quot;Flat 15:55 ET&quot;)
@@ -389,24 +390,31 @@ if strategy.position_size == 0 and not longSignal
     activeStop := na
 
 // --- Clean Dark-Mode Visuals ---
-plot(rthVwap, &quot;RTH VWAP&quot;, color = color.new(#2DD4BF, 20), linewidth = 2, style = plot.style_linebr)
+plot(rthVwap, &quot;RTH VWAP (Must Close Above at 13:00 ET)&quot;, color = color.new(#2DD4BF, 20), linewidth = 2, style = plot.style_linebr)
 plot(activeStop, &quot;Hard Stop (2x ATR15)&quot;, color = color.new(#F87171, 15), linewidth = 2, style = plot.style_linebr)
-plotshape(longSignal, title = &quot;Shield Battery 13:00 Signal&quot;, style = shape.triangleup, location = location.belowbar, color = #2DD4BF, size = size.small, text = &quot;SB&quot;, textcolor = #F3F5F8)
+plotshape(longSignal, title = &quot;Shield Battery Buy Signal&quot;, style = shape.triangleup, location = location.belowbar, color = #2DD4BF, size = size.small, text = &quot;BUY 13:00&quot;, textcolor = #F3F5F8)
 
-// --- Minimal Status Panel ---
-var table tbl = table.new(position.top_right, 2, 5, bgcolor = color.new(#0B0E14, 10), border_color = #1E293B, border_width = 1)
+// --- Dummy-Proof Plain-English Status Panel ---
+var table tbl = table.new(position.top_right, 2, 6, bgcolor = color.new(#0B0E14, 8), border_color = #1E293B, border_width = 1)
 if showTable and barstate.islast
+    actionTxt = not isOneMin ? &quot;USE 1-MIN CHART&quot; : (strategy.position_size &gt; 0 ? &quot;IN LONG (FLAT 15:55)&quot; : (tradedToday ? &quot;DONE FOR TODAY&quot; : (isFomcDay ? &quot;SKIP TODAY (FOMC)&quot; : (vix9dBlocked ? &quot;SKIP (VOL STRESS)&quot; : (not isPosGamma ? &quot;SKIP (NEG GAMMA)&quot; : (isRth and etTotalM &gt; checkTargetMin ? &quot;NO SIGNAL TODAY&quot; : &quot;WATCH 13:00 ET&quot;))))))
+    actionCol = not isOneMin ? #F87171 : (strategy.position_size &gt; 0 or actionTxt == &quot;WATCH 13:00 ET&quot; ? #2DD4BF : #94A3B8)
+    modeTxt   = isManualMode ? &quot;MANUAL FLIP&quot; : (na(vixRatio) ? &quot;N/A&quot; : str.tostring(vixRatio, &quot;#.##&quot;) + &quot; (VIX/3M)&quot;)
+    stopTxt   = not na(activeStop) ? str.tostring(activeStop, format.mintick) : (na(stopDist) ? &quot;N/A&quot; : str.tostring(stopDist, &quot;#.##&quot;) + &quot; pts&quot;)
+    stopLbl   = not na(activeStop) ? &quot;Active Hard Stop&quot; : &quot;Est. Stop (2x ATR)&quot;
+
     table.cell(tbl, 0, 0, &quot;OpenSourceEdge&quot;, text_color = #F3F5F8, text_size = size.small, text_halign = text.align_left)
     table.cell(tbl, 1, 0, &quot;Shield Battery&quot;, text_color = #2DD4BF, text_size = size.small, text_halign = text.align_right)
-    table.cell(tbl, 0, 1, &quot;Gamma Regime&quot;, text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
-    table.cell(tbl, 1, 1, isPosGamma ? &quot;POSITIVE&quot; : &quot;NEGATIVE&quot;, text_color = isPosGamma ? #2DD4BF : #F87171, text_size = size.tiny, text_halign = text.align_right)
-    table.cell(tbl, 0, 2, &quot;VIX / VIX3M&quot;, text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
-    table.cell(tbl, 1, 2, na(vixRatio) ? &quot;N/A&quot; : str.tostring(vixRatio, &quot;#.##&quot;), text_color = #F3F5F8, text_size = size.tiny, text_halign = text.align_right)
-    table.cell(tbl, 0, 3, &quot;VIX9D / VIX&quot;, text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
-    table.cell(tbl, 1, 3, na(vix9dRatio) ? &quot;N/A&quot; : str.tostring(vix9dRatio, &quot;#.##&quot;), text_color = vix9dBlocked ? #F87171 : #F3F5F8, text_size = size.tiny, text_halign = text.align_right)
-    table.cell(tbl, 0, 4, &quot;13:00 Status&quot;, text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
-    statusTxt = isFomcDay ? &quot;SKIP (FOMC)&quot; : (vix9dBlocked ? &quot;SKIP (VOL)&quot; : (regimeAllowed ? &quot;ARMED&quot; : &quot;OFF&quot;))
-    table.cell(tbl, 1, 4, statusTxt, text_color = regimeAllowed ? #2DD4BF : #94A3B8, text_size = size.tiny, text_halign = text.align_right)</pre>
+    table.cell(tbl, 0, 1, &quot;Today&#x27;s Action&quot;, text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
+    table.cell(tbl, 1, 1, actionTxt, text_color = actionCol, text_size = size.tiny, text_halign = text.align_right)
+    table.cell(tbl, 0, 2, &quot;Dealer Gamma&quot;, text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
+    table.cell(tbl, 1, 2, isPosGamma ? &quot;POSITIVE (SHIELDS ON)&quot; : &quot;NEGATIVE (OFFLINE)&quot;, text_color = isPosGamma ? #2DD4BF : #F87171, text_size = size.tiny, text_halign = text.align_right)
+    table.cell(tbl, 0, 3, &quot;Regime Input&quot;, text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
+    table.cell(tbl, 1, 3, modeTxt, text_color = #F3F5F8, text_size = size.tiny, text_halign = text.align_right)
+    table.cell(tbl, 0, 4, stopLbl, text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
+    table.cell(tbl, 1, 4, stopTxt, text_color = not na(activeStop) ? #F87171 : #F3F5F8, text_size = size.tiny, text_halign = text.align_right)
+    table.cell(tbl, 0, 5, &quot;Rule&quot;, text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
+    table.cell(tbl, 1, 5, &quot;MNQ 1m · Close &gt; VWAP&quot;, text_color = #CBD5E1, text_size = size.tiny, text_halign = text.align_right)</pre>
         </details>
         <details>
           <summary>NinjaTrader 8 · C#</summary>
