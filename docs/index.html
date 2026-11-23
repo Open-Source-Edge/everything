@@ -1,0 +1,1575 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OpenSourceEdge | Free Futures Code &amp; Options Flow Research</title>
+  <link rel="icon" href="assets/pfp.png" type="image/png" />
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0B0E14;
+      --surface: #111621;
+      --surface-2: #0E131D;
+      --border: #1E293B;
+      --border-hover: #334155;
+      --text: #F3F5F8;
+      --muted: #94A3B8;
+      --dim: #64748B;
+      --teal: #2DD4BF;
+      --red: #F87171;
+    }
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+    body {
+      background-color: var(--bg);
+      background-image:
+        linear-gradient(to right, rgba(148, 163, 184, 0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(148, 163, 184, 0.035) 1px, transparent 1px);
+      background-size: 64px 64px;
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", sans-serif;
+      line-height: 1.55;
+      -webkit-font-smoothing: antialiased;
+    }
+    .mono { font-family: "SF Mono", "JetBrains Mono", Menlo, Monaco, Consolas, monospace; }
+    .wrap {
+      max-width: 1020px;
+      margin: 0 auto;
+      padding: 28px 20px 72px 20px;
+    }
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding-bottom: 24px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 42px;
+      flex-wrap: wrap;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 19px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      color: var(--text);
+    }
+    .brand span.accent { color: var(--teal); }
+    .nav-links {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+    .nav-btn {
+      text-decoration: none;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 7px 13px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .nav-btn:hover { border-color: var(--border-hover); color: var(--text); }
+
+    .hero {
+      margin-bottom: 44px;
+    }
+    .hero h1 {
+      font-size: clamp(30px, 5vw, 46px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+    .hero p {
+      font-size: 18px;
+      color: var(--muted);
+      max-width: 680px;
+      margin-bottom: 22px;
+    }
+    .stats {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .stat-pill {
+      font-size: 13px;
+      color: #CBD5E1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 7px 14px;
+    }
+    .stat-pill strong { color: var(--teal); font-weight: 600; }
+
+    .section-label {
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--teal);
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px;
+      margin-bottom: 28px;
+      min-width: 0;
+    }
+    .card h2 {
+      font-size: 26px;
+      letter-spacing: -0.02em;
+      margin-bottom: 6px;
+    }
+    .card .lead {
+      color: var(--muted);
+      font-size: 16px;
+      margin-bottom: 22px;
+    }
+    .img-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .img-grid img {
+      width: 100%;
+      height: auto;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      display: block;
+    }
+    .rules-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .rule-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 14px;
+    }
+    .rule-step {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--dim);
+      margin-bottom: 5px;
+    }
+    .rule-text {
+      font-size: 14px;
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    button.copy-btn {
+      appearance: none;
+      cursor: pointer;
+      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 14px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: var(--surface-2);
+      color: var(--text);
+      transition: background 0.15s, border-color 0.15s, transform 0.08s;
+    }
+    button.copy-btn.primary {
+      background: var(--teal);
+      color: #06211E;
+      border-color: var(--teal);
+    }
+    button.copy-btn:hover { border-color: var(--teal); }
+    button.copy-btn.primary:hover { filter: brightness(1.06); }
+    button.copy-btn:active { transform: scale(0.99); }
+
+    details {
+      margin-top: 12px;
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    summary {
+      padding: 12px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      color: #CBD5E1;
+      user-select: none;
+    }
+    pre {
+      padding: 16px;
+      border-top: 1px solid var(--border);
+      overflow-x: auto;
+      font-size: 12.5px;
+      line-height: 1.5;
+      color: #CBD5E1;
+      max-height: 360px;
+    }
+
+    .grave-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 14px;
+    }
+    .grave-item {
+      background: var(--surface-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .grave-item h3 {
+      font-size: 15px;
+      margin-bottom: 6px;
+      color: var(--text);
+    }
+    .grave-item p {
+      font-size: 13.5px;
+      color: var(--muted);
+    }
+    .tag-dead {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--red);
+      margin-bottom: 6px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    footer {
+      margin-top: 40px;
+      padding-top: 20px;
+      border-top: 1px solid var(--border);
+      font-size: 13px;
+      color: var(--dim);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    @media (max-width: 720px) {
+      .wrap { padding: 20px 16px 56px 16px; }
+      nav { gap: 12px; margin-bottom: 28px; }
+      .img-grid { grid-template-columns: 1fr; }
+      .rules-grid { grid-template-columns: 1fr; }
+      .grave-grid { grid-template-columns: 1fr; }
+      .card { padding: 18px; }
+      button.copy-btn { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <nav>
+      <a class="brand" href="#">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+          <path d="M7 7L2.5 12L7 17" stroke="#F3F5F8" stroke-width="2.2" stroke-linecap="square"/>
+          <path d="M17 7L21.5 12L17 17" stroke="#F3F5F8" stroke-width="2.2" stroke-linecap="square"/>
+          <path d="M9.5 16.5V13.5H12V10.5H14.5V7.5" stroke="#2DD4BF" stroke-width="2.2" stroke-linecap="square"/>
+        </svg>
+        <span>OpenSource<span class="accent">Edge</span></span>
+      </a>
+      <div class="nav-links">
+        <a class="nav-btn" href="https://x.com/OpenSourceEdge" target="_blank" rel="noopener">X / Twitter</a>
+        <a class="nav-btn" href="https://github.com/Open-Source-Edge/everything" target="_blank" rel="noopener">GitHub Repo</a>
+      </div>
+    </nav>
+
+    <section class="hero">
+      <h1>Stop microing 1-minute candles with zero macro.</h1>
+      <p>Verified intraday futures Build Orders backed by 1B+ real ticks and 32M options rows. Strictly causal. No map hacks. Free forever.</p>
+      <div class="stats mono">
+        <div class="stat-pill"><strong>1B+</strong> Real Ticks</div>
+        <div class="stat-pill"><strong>32M</strong> Options Rows</div>
+        <div class="stat-pill"><strong>8 Years</strong> Data (2019-2026)</div>
+        <div class="stat-pill"><strong>NT8 + TradingView</strong></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-label mono">Build Order 01 · Protoss Options Plumbing</div>
+      <h2>Shield Battery (Long-Gamma 1:00 PM Drift)</h2>
+      <p class="lead">Same exact 13:00 ET VWAP entry split solely by where ES opens relative to the pre-market SPX 14-DTE Gamma Flip.</p>
+
+      <div class="img-grid">
+        <img src="assets/ep01-concept.png" alt="Dealer Gamma in 5 Seconds" />
+        <img src="assets/ep01-proof.png" alt="8-Year Backtest Proof Split by Dealer Gamma" />
+      </div>
+
+      <div class="rules-grid">
+        <div class="rule-item">
+          <div class="rule-step mono">01 · Regime</div>
+          <div class="rule-text">ES opens above SPX 14-DTE Gamma Flip</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-step mono">02 · Calendar</div>
+          <div class="rule-text">Skip the 8 FOMC decision days a year</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-step mono">03 · Entry</div>
+          <div class="rule-text">Buy 1 MNQ if 13:00 ET close &gt; RTH VWAP</div>
+        </div>
+        <div class="rule-item">
+          <div class="rule-step mono">04 · Exit</div>
+          <div class="rule-text">2.0x ATR(15m) hard stop, flat 15:55 ET</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="copy-btn primary" onclick="copyBlock('pine-src', this)">Copy TradingView Script (v6)</button>
+        <button class="copy-btn" onclick="copyBlock('cs-src', this)">Copy NinjaTrader 8 Bot (C#)</button>
+        <button class="copy-btn" onclick="copyBlock('prompt-src', this)">Copy Gemini 4 Neon Prompt</button>
+      </div>
+
+      <details>
+        <summary>View TradingView PineScript v6 Code</summary>
+        <pre class="mono" id="pine-src">//@version=6
+// ============================================================================
+// OpenSourceEdge - Build Order #01: Shield Battery (Long-Gamma Drift, TV v6)
+// ============================================================================
+// Author:  @OpenSourceEdge
+// License: MIT (Free to use, modify, fork, and backtest)
+// Chart:   MNQ1! (or NQ1!) on 1-Minute timeframe
+// Scouted on 1B+ real ticks &amp; 32M options rows. Strictly causal. No map hacks.
+//
+// TWO REGIME MODES:
+// 1. &quot;Auto Free Proxy (VIX/VIX3M)&quot; [Default for Instant Backtesting]:
+//    Uses strictly causal prior-day CBOE:VIX / CBOE:VIX3M &lt; 0.98 (plus optional
+//    VIX9D/VIX &lt; 1.05 veto) right inside TradingView so you can backtest with
+//    zero external files. Note: the primary 8-year research used strike-level
+//    SPX 14-DTE Gamma Flip (32M OPRA rows).
+// 2. &quot;Live Manual Gamma Flip&quot; [Recommended for Daily Live Alerts]:
+//    Enter today&#x27;s pre-market SPX Gamma Flip (or toggle Positive Gamma Today)
+//    each morning before 09:30 ET. Fires clean 13:00 ET entry + stop alerts
+//    and 15:55 ET exit alerts for 10-second manual prop-firm execution.
+// ============================================================================
+
+strategy(
+    &quot;OpenSourceEdge: Shield Battery (Long-Gamma 13:00)&quot;,
+    shorttitle = &quot;OSE Shield Battery&quot;,
+    overlay = true,
+    initial_capital = 50000,
+    default_qty_type = strategy.fixed,
+    default_qty_value = 1,
+    commission_type = strategy.commission.cash_per_contract,
+    commission_value = 0.62,
+    slippage = 1,
+    calc_on_every_tick = false,
+    process_orders_on_close = false
+)
+
+// --- Inputs ---
+grpReg = &quot;1. Dealer Gamma Regime&quot;
+regimeMode     = input.string(&quot;Auto Free Proxy (VIX/VIX3M)&quot;, &quot;Regime Mode&quot;,
+                 options = [&quot;Auto Free Proxy (VIX/VIX3M)&quot;, &quot;Live Manual Gamma Flip&quot;], group = grpReg)
+vixRatioMax    = input.float(0.98, &quot;Proxy: Max Prior-Day VIX/VIX3M&quot;, step = 0.01, minval = 0.70, maxval = 1.20, group = grpReg)
+useVix9dVeto   = input.bool(true, &quot;Skip VIX9D/VIX &gt;= 1.05 (Short-Term Vol Stress)&quot;, group = grpReg)
+vix9dMax       = input.float(1.05, &quot;Max Prior-Day VIX9D/VIX&quot;, step = 0.01, minval = 0.80, maxval = 1.50, group = grpReg)
+manualPosGamma = input.bool(true, &quot;Live Mode: Positive Gamma Today (ES Open &gt; SPX Flip)&quot;, group = grpReg)
+
+grpSig = &quot;2. Signal &amp; Risk&quot;
+checkHourEt    = input.int(13, &quot;Check Hour (ET)&quot;, minval = 12, maxval = 15, group = grpSig)
+checkMinEt     = input.int(0,  &quot;Check Minute (ET)&quot;, minval = 0, maxval = 59, group = grpSig)
+exitHourEt     = input.int(15, &quot;Flat Hour (ET)&quot;, minval = 13, maxval = 15, group = grpSig)
+exitMinEt      = input.int(55, &quot;Flat Minute (ET)&quot;, minval = 0, maxval = 59, group = grpSig)
+stopAtrMult    = input.float(2.0, &quot;Stop Loss (ATR 15m Multiple)&quot;, step = 0.25, minval = 0.5, maxval = 5.0, group = grpSig)
+minStopTicks   = input.int(16, &quot;Min Stop (Ticks)&quot;, minval = 4, maxval = 200, group = grpSig)
+maxStopPoints  = input.float(200.0, &quot;Max Stop Cap (Points, 0 = Off)&quot;, minval = 0.0, group = grpSig)
+skipFomc       = input.bool(true, &quot;Skip Scheduled FOMC Days (2024-2026)&quot;, group = grpSig)
+
+grpUi = &quot;3. Display&quot;
+showTable      = input.bool(true, &quot;Show Status Panel&quot;, group = grpUi)
+
+// --- Strictly Causal Prior-Day CBOE Term Structure (Zero Lookahead) ---
+vixPrev   = request.security(&quot;CBOE:VIX&quot;,   &quot;D&quot;, close[1], gaps = barmerge.gaps_off, lookahead = barmerge.lookahead_on)
+vix3mPrev = request.security(&quot;CBOE:VIX3M&quot;, &quot;D&quot;, close[1], gaps = barmerge.gaps_off, lookahead = barmerge.lookahead_on)
+vix9dPrev = request.security(&quot;CBOE:VIX9D&quot;, &quot;D&quot;, close[1], gaps = barmerge.gaps_off, lookahead = barmerge.lookahead_on)
+
+vixRatio   = (not na(vixPrev) and not na(vix3mPrev) and vix3mPrev &gt; 0) ? (vixPrev / vix3mPrev) : na
+vix9dRatio = (not na(vix9dPrev) and not na(vixPrev) and vixPrev &gt; 0) ? (vix9dPrev / vixPrev) : na
+
+// Causal 15-minute ATR (14-bar SMA of 15m True Range, using closed 15m bar)
+atr15m = request.security(syminfo.tickerid, &quot;15&quot;, ta.sma(ta.tr(true), 14)[1], gaps = barmerge.gaps_off, lookahead = barmerge.lookahead_on)
+
+// --- Eastern Time Session Clock ---
+etYear   = year(time_close, &quot;America/New_York&quot;)
+etMonth  = month(time_close, &quot;America/New_York&quot;)
+etDay    = dayofmonth(time_close, &quot;America/New_York&quot;)
+etHour   = hour(time_close, &quot;America/New_York&quot;)
+etMin    = minute(time_close, &quot;America/New_York&quot;)
+etTotalM = etHour * 60 + etMin
+dayKey   = etYear * 10000 + etMonth * 100 + etDay
+
+isRth = etTotalM &gt; (9 * 60 + 30) and etTotalM &lt;= (16 * 60)
+isNewRthDay = isRth and not isRth[1] and (na(dayKey[1]) or dayKey != dayKey[1] or etTotalM &lt;= 9 * 60 + 35)
+
+// Built-in Scheduled FOMC Decision Dates (2024-2026)
+f_isFomc(int dk) =&gt;
+    dk == 20240131 or dk == 20240320 or dk == 20240501 or dk == 20240612 or
+    dk == 20240731 or dk == 20240918 or dk == 20241107 or dk == 20241218 or
+    dk == 20250129 or dk == 20250319 or dk == 20250507 or dk == 20250618 or
+    dk == 20250730 or dk == 20250917 or dk == 20251029 or dk == 20251210 or
+    dk == 20260128 or dk == 20260318 or dk == 20260429 or dk == 20260617 or
+    dk == 20260729 or dk == 20260916 or dk == 20261028 or dk == 20261209
+
+isFomcDay = skipFomc and f_isFomc(dayKey)
+
+// --- RTH VWAP Calculation (Anchored strictly at 09:30 ET) ---
+var float cumPV = na
+var float cumV  = na
+var bool  tradedToday = false
+var float activeStop  = na
+
+if isNewRthDay
+    cumPV := 0.0
+    cumV  := 0.0
+    tradedToday := false
+    activeStop  := na
+
+if isRth
+    tp = (high + low + close) / 3.0
+    vol = math.max(volume, 0.0)
+    cumPV += tp * vol
+    cumV  += vol
+
+rthVwap = (isRth and cumV &gt; 0) ? (cumPV / cumV) : na
+
+// --- Regime Qualification ---
+proxyPosGamma = not na(vixRatio) and vixRatio &lt; vixRatioMax
+isPosGamma    = regimeMode == &quot;Live Manual Gamma Flip&quot; ? manualPosGamma : proxyPosGamma
+vix9dBlocked  = useVix9dVeto and not na(vix9dRatio) and vix9dRatio &gt;= vix9dMax
+regimeAllowed = isPosGamma and not isFomcDay and not vix9dBlocked
+
+// --- Entry &amp; Exit Logic ---
+checkTargetMin = checkHourEt * 60 + checkMinEt
+exitTargetMin  = exitHourEt * 60 + exitMinEt
+
+isCheckBar = isRth and etTotalM == checkTargetMin
+isExitBar  = isRth and etTotalM &gt;= exitTargetMin
+
+rawStopDist = not na(atr15m) ? (stopAtrMult * atr15m) : na
+minStopDist = minStopTicks * syminfo.mintick
+stopDist    = na(rawStopDist) ? na : math.max(minStopDist, rawStopDist)
+if maxStopPoints &gt; 0 and not na(stopDist)
+    stopDist := math.min(stopDist, maxStopPoints)
+
+longSignal = isCheckBar and not tradedToday and strategy.position_size == 0 and regimeAllowed and not na(rthVwap) and close &gt; rthVwap and not na(stopDist)
+
+if longSignal
+    stopPrice = close - stopDist
+    activeStop := stopPrice
+    tradedToday := true
+    strategy.entry(&quot;LG Long&quot;, strategy.long, comment = &quot;OSE PosGamma 13:00&quot;)
+    strategy.exit(&quot;LG Stop&quot;, from_entry = &quot;LG Long&quot;, stop = stopPrice)
+    alert(&quot;OpenSourceEdge Ep.1 SIGNAL LONG: &quot; + syminfo.ticker + &quot; at &quot; + str.tostring(close, format.mintick) +
+          &quot; | Hard Stop: &quot; + str.tostring(stopPrice, format.mintick) + &quot; | Flat 15:55 ET&quot;, alert.freq_once_per_bar_close)
+
+if strategy.position_size &gt; 0 and isExitBar
+    strategy.close(&quot;LG Long&quot;, comment = &quot;Flat 15:55 ET&quot;)
+    activeStop := na
+    alert(&quot;OpenSourceEdge Ep.1 FLAT 15:55 ET: Close &quot; + syminfo.ticker + &quot; long position.&quot;, alert.freq_once_per_bar_close)
+
+if strategy.position_size == 0 and not longSignal
+    activeStop := na
+
+// --- Clean Dark-Mode Visuals ---
+plot(rthVwap, &quot;RTH VWAP&quot;, color = color.new(#2DD4BF, 20), linewidth = 2, style = plot.style_linebr)
+plot(activeStop, &quot;Hard Stop (2x ATR15)&quot;, color = color.new(#F87171, 15), linewidth = 2, style = plot.style_linebr)
+plotshape(longSignal, title = &quot;13:00 Pos-Gamma Signal&quot;, style = shape.triangleup, location = location.belowbar,
+          color = #2DD4BF, size = size.small, text = &quot;LG&quot;, textcolor = #F3F5F8)
+
+// --- Minimal Status Panel ---
+if showTable and barstate.islast
+    var table tbl = table.new(position.top_right, 2, 5, bgcolor = color.new(#0B0E14, 10), border_color = #1E293B, border_width = 1)
+    table.cell(tbl, 0, 0, &quot;OpenSourceEdge&quot;, text_color = #F3F5F8, text_size = size.small, text_halign = text.align_left)
+    table.cell(tbl, 1, 0, &quot;Ep. 1 LG Drift&quot;, text_color = #2DD4BF, text_size = size.small, text_halign = text.align_right)
+    table.cell(tbl, 0, 1, &quot;Gamma Regime&quot;, text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
+    table.cell(tbl, 1, 1, isPosGamma ? &quot;POSITIVE&quot; : &quot;NEGATIVE&quot;, text_color = isPosGamma ? #2DD4BF : #F87171, text_size = size.tiny, text_halign = text.align_right)
+    table.cell(tbl, 0, 2, &quot;VIX / VIX3M&quot;, text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
+    table.cell(tbl, 1, 2, na(vixRatio) ? &quot;N/A&quot; : str.tostring(vixRatio, &quot;#.##&quot;), text_color = #F3F5F8, text_size = size.tiny, text_halign = text.align_right)
+    table.cell(tbl, 0, 3, &quot;VIX9D / VIX&quot;, text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
+    table.cell(tbl, 1, 3, na(vix9dRatio) ? &quot;N/A&quot; : str.tostring(vix9dRatio, &quot;#.##&quot;), text_color = vix9dBlocked ? #F87171 : #F3F5F8, text_size = size.tiny, text_halign = text.align_right)
+    table.cell(tbl, 0, 4, &quot;13:00 Status&quot;, text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
+    statusTxt = isFomcDay ? &quot;SKIP (FOMC)&quot; : (vix9dBlocked ? &quot;SKIP (VOL)&quot; : (regimeAllowed ? &quot;ARMED&quot; : &quot;OFF&quot;))
+    table.cell(tbl, 1, 4, statusTxt, text_color = regimeAllowed ? #2DD4BF : #94A3B8, text_size = size.tiny, text_halign = text.align_right)</pre>
+      </details>
+
+      <details>
+        <summary>View NinjaTrader 8 C# Code</summary>
+        <pre class="mono" id="cs-src">// ============================================================================
+// OpenSourceEdge - Build Order #01: Shield Battery (Long-Gamma Drift, NT8)
+// ============================================================================
+// Author:  @OpenSourceEdge
+// License: MIT (Free to use, modify, fork, and backtest)
+// Scouted on 1B+ real ticks &amp; 32M options rows. Strictly causal. No map hacks.
+// Disclaimer: Educational and quantitative research software only. Not
+// financial advice. Verify your broker or prop firm rules before running
+// automated order execution.
+//
+// MECHANISM:
+// When ES opens at 09:30 ET above the causally mapped pre-market SPX 14-DTE
+// Gamma Flip (Positive Gamma), options dealers hedge by buying dips and
+// selling rips. As daily options decay in the afternoon, volatility stays
+// suppressed and equities tend to grind steadily higher into the close.
+//
+// RULES:
+// 1. Pre-market regime: ES 09:30 ET open &gt; mapped SPX 14-DTE Gamma Flip:
+//      flip_es = es_prior_close * (d14_gamma_flip / spx_prior_close)
+//    (Fallback if flip is blank: d14_net_gex_b &gt; 0).
+// 2. Pause on scheduled Fed FOMC decision days (built-in 2019-2026 calendar).
+// 3. Optional dual-period regime vetoes (all pass through if column missing):
+//    - VIX9D/VIX &gt;= 1.05 (short-term vol inversion)
+//    - QQQ 60-day put/call volume percentile &lt;= 0.15 (call frenzy)
+// 4. Signal: at 13:00 ET, if MNQ closes strictly above RTH VWAP (09:30+),
+//    buy at market on the 1-tick execution series.
+// 5. Risk: hard stop at max(16 ticks, round(2.0 x ATR15)), capped by MaxStopPoints.
+// 6. Exit: flat at 15:55 ET (hard safety clock at 15:56 ET). Max 1 trade/day.
+//
+// CHART SETUP:
+// - Instrument: MNQ (front contract, e.g. MNQ 12-26)
+// - Bars: 1 Minute | Trading Hours: CME US Index Futures ETH | Days to load: 40+
+// - CSV Path: defaults to Documents\NinjaTrader 8\OpenSourceEdge\daily_regime.csv
+//   (auto-reloads live in real time whenever updated pre-market)
+// ============================================================================
+
+#region Using declarations
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.IO;
+using NinjaTrader.Cbi;
+using NinjaTrader.Data;
+using NinjaTrader.NinjaScript;
+using NinjaTrader.NinjaScript.Strategies.OpenSourceEdgeLgCore;
+#endregion
+
+namespace NinjaTrader.NinjaScript.Strategies
+{
+    public class LongGammaDriftOpenSource : Strategy
+    {
+        private LgCore core;
+        private LgRegimeTable regime;
+        private bool refused, runWritten, optimizing;
+        private string configProblem, esName = &quot;&quot;, resolvedCsvPath = &quot;&quot;;
+        private TimeZoneInfo eastern;
+        private DateTime offsetKey = DateTime.MinValue;
+        private TimeSpan offsetToEastern;
+        private StreamWriter writer;
+        private SessionIterator sessionIterator;
+        private System.Timers.Timer clock;
+        private int checkMinute, exitMinute;
+        private DateTime lastTradeEt = DateTime.MinValue;
+
+        private DateTime railDay = DateTime.MinValue, entryDay = DateTime.MinValue;
+        private bool haltedToday, exitPending;
+        private double realizedToday;
+        private string exitPendingName = &quot;&quot;;
+        private LgDecision todaySignal;
+
+        private int openQty, closedQty, openStopTicks;
+        private DateTime openTime, lastExitTime;
+        private double openValue, exitValue, openCommission, exitCommission;
+        private string openNote = &quot;&quot;, lastExitName = &quot;&quot;;
+        private int tradesLogged, signalsPlaced;
+
+        private const int TickIndex = 1;
+        private const int EsIndex = 2;
+        private const string LongName = &quot;OSE LG Long&quot;;
+        private const string FlatName = &quot;OSE LG Flat&quot;;
+        private const string SafetyName = &quot;OSE LG Safety&quot;;
+        private const string DailyLossName = &quot;OSE LG DLL&quot;;
+        private static readonly TimeSpan HardFlat = new TimeSpan(15, 56, 0);
+
+        protected override void OnStateChange()
+        {
+            if (State == State.SetDefaults)
+            {
+                Description = &quot;OpenSourceEdge Build Order #01: Shield Battery (Long-Gamma Afternoon Drift). When ES opens above the causally mapped SPX 14-DTE Gamma Flip (Positive Gamma) and MNQ closes above RTH VWAP at 13:00 ET, buy with a 2x ATR15 hard stop and exit flat at 15:55 ET.&quot;;
+                Name = &quot;LongGammaDriftOpenSource&quot;;
+                Calculate = Calculate.OnBarClose;
+                EntriesPerDirection = 1;
+                EntryHandling = EntryHandling.AllEntries;
+                IsExitOnSessionCloseStrategy = true;
+                ExitOnSessionCloseSeconds = 30;
+                IsFillLimitOnTouch = false;
+                MaximumBarsLookBack = MaximumBarsLookBack.TwoHundredFiftySix;
+                OrderFillResolution = OrderFillResolution.Standard;
+                Slippage = 1;
+                StartBehavior = StartBehavior.WaitUntilFlat;
+                TimeInForce = TimeInForce.Day;
+                TraceOrders = false;
+                RealtimeErrorHandling = RealtimeErrorHandling.StopCancelClose;
+                StopTargetHandling = StopTargetHandling.PerEntryExecution;
+                BarsRequiredToTrade = 0;
+                IsInstantiatedOnEachOptimizationIteration = true;
+
+                Quantity = 1;
+                CheckTimeEt = 1300;
+                ExitTimeEt = 1555;
+                StopAtrMultiple = 2.0;
+                MinStopTicks = 16;
+                MaxStopPoints = 200;
+                SkipFomcDays = true;
+                SkipQqqCallFrenzy = false;
+                QqqCallFrenzyMaxPct = 0.15;
+                SkipVix9dInverted = false;
+                MaxVix9dRatio = 1.05;
+                RegimeCsvPath = &quot;&quot;;
+                EsInstrument = &quot;&quot;;
+                ExtraFomcDates = &quot;&quot;;
+                MaxDailyLossDollars = 1000;
+                AllowOtherInstruments = false;
+                AllowSharedAccountPositions = true;
+                BlockOpposingAccountPosition = true;
+                WriteCsv = true;
+            }
+            else if (State == State.Configure)
+            {
+                AddDataSeries(Data.BarsPeriodType.Tick, 1);
+                string suffix = ContractSuffix();
+                esName = IsAuto(EsInstrument) ? &quot;ES &quot; + suffix : EsInstrument.Trim();
+                if (!InstrumentExists(esName)) esName = &quot;ES ##-##&quot;;
+                if (!InstrumentExists(esName))
+                {
+                    configProblem = &quot;ES reference instrument &quot; + esName + &quot; was not found. Set &#x27;ES instrument&#x27; explicitly (for example ES 12-26).&quot;;
+                    return;
+                }
+                AddDataSeries(esName, Data.BarsPeriodType.Minute, 1);
+            }
+            else if (State == State.DataLoaded)
+            {
+                optimizing = Category == Category.Optimize || Category == Category.WalkForward || Category == Category.MultiObjective;
+                try { eastern = TimeZoneInfo.FindSystemTimeZoneById(&quot;Eastern Standard Time&quot;); }
+                catch { eastern = TimeZoneInfo.Local; Say(&quot;Eastern time zone not found, using local time.&quot;); }
+
+                string why = configProblem ?? StartProblem();
+                if (why != null)
+                {
+                    refused = true;
+                    Say(&quot;REFUSED TO START: &quot; + why + &quot; No orders will be placed.&quot;);
+                    try { Log(&quot;LongGammaDriftOpenSource refused to start: &quot; + why, LogLevel.Error); } catch { }
+                    return;
+                }
+
+                resolvedCsvPath = string.IsNullOrWhiteSpace(RegimeCsvPath)
+                    ? Path.Combine(NinjaTrader.Core.Globals.UserDataDir, &quot;OpenSourceEdge&quot;, &quot;daily_regime.csv&quot;)
+                    : RegimeCsvPath.Trim();
+
+                regime = new LgRegimeTable(resolvedCsvPath);
+                regime.ReloadIfChanged();
+
+                core = new LgCore();
+                core.CheckMinute = checkMinute;
+                core.ExitMinute = exitMinute;
+                core.StopAtrMult = StopAtrMultiple;
+                core.MinStopTicks = MinStopTicks;
+                core.MaxStopTicks = MaxStopPoints &gt; 0 ? (int)Math.Floor(MaxStopPoints / TickSize + 1e-9) : 0;
+                core.SkipFomcDays = SkipFomcDays;
+                core.SkipQqqCallFrenzy = SkipQqqCallFrenzy;
+                core.QqqCallFrenzyMaxPct = QqqCallFrenzyMaxPct;
+                core.SkipVix9dInverted = SkipVix9dInverted;
+                core.MaxVix9dRatio = MaxVix9dRatio;
+                core.SetExtraFomcDates(ExtraFomcDates);
+                core.RegimeLookup = delegate(DateTime d)
+                {
+                    if (State == State.Realtime) regime.ReloadIfChanged();
+                    return regime.Get(d);
+                };
+
+                sessionIterator = new SessionIterator(BarsArray[0]);
+                if (WriteCsv &amp;&amp; !optimizing) OpenCsv();
+
+                Say(string.Format(CultureInfo.InvariantCulture,
+                    &quot;{0}, ES ref {1}, qty {2}. Check {3} ET, flat {4} ET. Stop max({5}, round({6} x ATR15)){7}. SkipFOMC={8}. CSV={9} ({10} rows). DLL {11}.&quot;,
+                    Instrument.FullName, BarsArray[EsIndex].Instrument.FullName, Quantity, Hhmm(checkMinute), Hhmm(exitMinute),
+                    MinStopTicks, StopAtrMultiple, MaxStopPoints &gt; 0 ? string.Format(CultureInfo.InvariantCulture, &quot;, cap {0} pts&quot;, MaxStopPoints) : &quot;&quot;,
+                    SkipFomcDays ? &quot;on&quot; : &quot;off&quot;, resolvedCsvPath, regime.Count,
+                    MaxDailyLossDollars &gt; 0 ? &quot;$&quot; + MaxDailyLossDollars.ToString(&quot;0.##&quot;, CultureInfo.InvariantCulture) : &quot;off&quot;));
+            }
+            else if (State == State.Realtime)
+            {
+                if (refused) return;
+                if (regime != null) regime.ReloadIfChanged();
+                if (todaySignal != null &amp;&amp; entryDay == todaySignal.Date &amp;&amp; todaySignal.Date == railDay)
+                    Say(&quot;Today&#x27;s signal occurred on historical bars. No live entry will be sent today.&quot;);
+                if (Position.MarketPosition != MarketPosition.Flat)
+                    Say(&quot;A virtual historical position is open. StartBehavior WaitUntilFlat prevents live orders until flat.&quot;);
+                StartClock();
+            }
+            else if (State == State.Terminated)
+            {
+                StopClock();
+                if (core != null &amp;&amp; core.StudyDays &gt; 0)
+                    Say(string.Format(&quot;{0} valid days, {1} signals, {2} entries placed, {3} trades written.&quot;,
+                        core.StudyDays, core.SignalDays, signalsPlaced, tradesLogged));
+                if (writer != null) { writer.Flush(); writer.Dispose(); writer = null; }
+            }
+        }
+
+        private string StartProblem()
+        {
+            BarsPeriod bp = BarsArray[0].BarsPeriod;
+            if (bp.BarsPeriodType != BarsPeriodType.Minute || bp.Value != 1)
+                return &quot;Primary series must be 1 Minute bars (found &quot; + bp.ToString() + &quot;).&quot;;
+            string root = Instrument.MasterInstrument.Name;
+            if (root != &quot;MNQ&quot; &amp;&amp; root != &quot;NQ&quot; &amp;&amp; !AllowOtherInstruments)
+                return &quot;Validated on MNQ (NQ allowed). Found &quot; + Instrument.FullName + &quot;. Enable &#x27;Allow other instruments&#x27; to override.&quot;;
+            if (BarsArray.Length &lt; 3) return &quot;ES reference series did not load.&quot;;
+            checkMinute = ToMinute(CheckTimeEt);
+            exitMinute = ToMinute(ExitTimeEt);
+            if (checkMinute &lt; 0 || exitMinute &lt; 0) return &quot;Times must be HHMM with minutes 00 to 59.&quot;;
+            if (checkMinute &lt; 12 * 60 || checkMinute &gt; 15 * 60) return &quot;Check time must be between 1200 and 1500 ET.&quot;;
+            if (exitMinute &lt;= checkMinute + 5 || exitMinute &gt; 15 * 60 + 55) return &quot;Exit time must be after check time and at or before 1555 ET.&quot;;
+            return null;
+        }
+
+        protected override void OnBarUpdate()
+        {
+            if (refused || core == null) return;
+            if (CurrentBars[BarsInProgress] &lt; 0) return;
+            if (BarsInProgress == TickIndex) { OnTrade(); return; }
+            if (!runWritten &amp;&amp; BarsInProgress == 0) { runWritten = true; WriteRunRow(); }
+
+            int bip = BarsInProgress;
+            DateTime end = ToEastern(Times[bip][0]);
+            double ts = BarsArray[bip].Instrument.MasterInstrument.TickSize;
+            if (bip == EsIndex)
+            {
+                core.OnEsBar(end, ToTicks(Opens[EsIndex][0], ts), ToTicks(Closes[EsIndex][0], ts));
+                return;
+            }
+            if (bip != 0) return;
+
+            NewDay(end.Date);
+            core.OnBar(end, ToTicks(Opens[0][0], ts), ToTicks(Highs[0][0], ts), ToTicks(Lows[0][0], ts), ToTicks(Closes[0][0], ts), Volumes[0][0]);
+            for (int i = 0; i &lt; core.Events.Count; i++)
+            {
+                LgDecision ev = core.Events[i];
+                if (ev.Kind == &quot;decision&quot;) OnDecision(ev, end);
+                else if (ev.Kind == &quot;flat&quot;) Flatten(FlatName, end, &quot;flat at &quot; + Hhmm(exitMinute) + &quot; ET&quot;);
+            }
+            core.Events.Clear();
+        }
+
+        private void OnTrade()
+        {
+            DateTime t = ToEastern(Times[TickIndex][0]);
+            lastTradeEt = t;
+            NewDay(t.Date);
+            if (Position.MarketPosition == MarketPosition.Flat) return;
+            string outside = OutsideHoldWindow(t);
+            if (outside != null) { Flatten(SafetyName, t, outside); return; }
+            if (MaxDailyLossDollars &gt; 0 &amp;&amp; !haltedToday)
+            {
+                double open = Position.GetUnrealizedProfitLoss(PerformanceUnit.Currency, Closes[TickIndex][0]) - openCommission;
+                double total = realizedToday + open;
+                if (total &lt;= -MaxDailyLossDollars)
+                {
+                    haltedToday = true;
+                    string note = string.Format(CultureInfo.InvariantCulture, &quot;daily P&amp;L ${0:0.00} hit ${1:0.00} limit at {2}&quot;, total, MaxDailyLossDollars, F(Closes[TickIndex][0]));
+                    Rail(t, &quot;daily loss limit&quot;, note);
+                    Flatten(DailyLossName, t, note);
+                }
+            }
+        }
+
+        private void OnDecision(LgDecision ev, DateTime barEnd)
+        {
+            string head = string.Format(&quot;{0} {1} ET&quot;, D(ev.Date), barEnd.ToString(&quot;HH:mm&quot;, CultureInfo.InvariantCulture));
+            if (ev.Action != &quot;signal&quot;)
+            {
+                WriteDecisionRow(barEnd, ev, ev.Action, ev.Reason);
+                return;
+            }
+            todaySignal = ev;
+            DateTime now = State == State.Realtime &amp;&amp; lastTradeEt &gt; barEnd ? lastTradeEt : barEnd;
+            string block = EntryBlock(ev, now);
+            if (block != null)
+            {
+                WriteDecisionRow(barEnd, ev, &quot;blocked&quot;, block);
+                Rail(now, &quot;entry refused&quot;, block);
+                Say(head + &quot;: SIGNAL LONG blocked by rail: &quot; + block + &quot;.&quot;);
+                return;
+            }
+            WriteDecisionRow(barEnd, ev, &quot;signal&quot;, &quot;&quot;);
+            Say(string.Format(CultureInfo.InvariantCulture,
+                &quot;{0}: SIGNAL LONG (Positive Gamma). Close {1} &gt; VWAP {2}, ES Open {3} &gt; Flip {4:0.00}, ATR15 {5:0.0}t, stop {6}t ({7} pts).&quot;,
+                head, F(ev.CloseTicks * TickSize), F(ev.VwapTicks * TickSize), F(ev.EsOpenTicks * BarsArray[EsIndex].Instrument.MasterInstrument.TickSize),
+                ev.MappedFlipTicks * BarsArray[EsIndex].Instrument.MasterInstrument.TickSize, ev.Atr15Ticks, ev.StopTicks, F(ev.StopTicks * TickSize)));
+
+            SetStopLoss(LongName, CalculationMode.Ticks, ev.StopTicks, false);
+            entryDay = ev.Date;
+            openStopTicks = ev.StopTicks;
+            signalsPlaced++;
+            openNote = string.Format(CultureInfo.InvariantCulture, &quot;PosGamma; ATR15 {0:0.0}t&quot;, ev.Atr15Ticks);
+            Row(&quot;kind&quot;, &quot;order&quot;, &quot;date&quot;, D(ev.Date), &quot;time_et&quot;, T(now), &quot;action&quot;, &quot;enter long&quot;, &quot;dir&quot;, &quot;1&quot;,
+                &quot;stop_ticks&quot;, ev.StopTicks.ToString(CultureInfo.InvariantCulture), &quot;qty&quot;, Quantity.ToString(CultureInfo.InvariantCulture), &quot;note&quot;, openNote);
+            EnterLong(TickIndex, Quantity, LongName);
+        }
+
+        private string EntryBlock(LgDecision ev, DateTime nowEt)
+        {
+            if (haltedToday || (MaxDailyLossDollars &gt; 0 &amp;&amp; realizedToday &lt;= -MaxDailyLossDollars)) return &quot;daily loss limit reached today&quot;;
+            if (entryDay == ev.Date) return &quot;already entered once today&quot;;
+            if (Position.MarketPosition != MarketPosition.Flat) return &quot;position already open&quot;;
+            if (State == State.Realtime &amp;&amp; PositionAccount != null &amp;&amp; PositionAccount.MarketPosition != MarketPosition.Flat)
+            {
+                if (!AllowSharedAccountPositions) return &quot;account already holds a position in &quot; + Instrument.FullName;
+                if (BlockOpposingAccountPosition &amp;&amp; ev.Dir &gt; 0 &amp;&amp; PositionAccount.MarketPosition == MarketPosition.Short)
+                    return &quot;account holds an opposing short position in &quot; + Instrument.FullName;
+            }
+            if (nowEt.Date != ev.Date) return &quot;decision date mismatch&quot;;
+            TimeSpan tod = nowEt.TimeOfDay;
+            if (tod &lt; TimeSpan.FromMinutes(checkMinute - 5) || tod &gt; TimeSpan.FromMinutes(checkMinute + 10)) return &quot;outside check window&quot;;
+            if (tod &gt;= TimeSpan.FromMinutes(exitMinute)) return &quot;at or after exit time&quot;;
+            if (ev.StopTicks &lt;= 0) return &quot;invalid stop distance&quot;;
+            return EarlyClose(ev.Date);
+        }
+
+        private string EarlyClose(DateTime day)
+        {
+            if (sessionIterator == null) return null;
+            try
+            {
+                sessionIterator.GetNextSession(Times[0][0], true);
+                DateTime endEt = ToEastern(sessionIterator.ActualSessionEnd);
+                if (endEt.Date == day &amp;&amp; endEt.TimeOfDay &lt; new TimeSpan(16, 0, 0))
+                    return &quot;early close day (ends &quot; + endEt.ToString(&quot;HH:mm&quot;, CultureInfo.InvariantCulture) + &quot; ET)&quot;;
+            }
+            catch (Exception ex) { Say(&quot;session check warning: &quot; + ex.Message); }
+            return null;
+        }
+
+        private string OutsideHoldWindow(DateTime tEt)
+        {
+            if (tEt.TimeOfDay &gt;= HardFlat) return &quot;position open at or after 15:56 ET&quot;;
+            if (tEt.TimeOfDay &lt; TimeSpan.FromMinutes(checkMinute - 10) || tEt.Date != entryDay) return &quot;position open outside hold window&quot;;
+            return null;
+        }
+
+        private void Flatten(string name, DateTime tEt, string why)
+        {
+            if (Position.MarketPosition == MarketPosition.Flat || exitPending) return;
+            exitPending = true; exitPendingName = name;
+            bool isLong = Position.MarketPosition == MarketPosition.Long;
+            Say(string.Format(&quot;{0} ET: FLATTEN {1} {2} ({3}).&quot;, T(tEt), isLong ? &quot;long&quot; : &quot;short&quot;, Position.Quantity, why));
+            Row(&quot;kind&quot;, &quot;order&quot;, &quot;date&quot;, D(tEt), &quot;time_et&quot;, T(tEt), &quot;action&quot;, &quot;exit &quot; + name, &quot;note&quot;, why);
+            if (isLong) ExitLong(TickIndex, Position.Quantity, name, LongName);
+            else ExitShort(TickIndex, Position.Quantity, name, &quot;&quot;);
+        }
+
+        private void NewDay(DateTime day) { if (day != railDay) { railDay = day; haltedToday = false; realizedToday = 0; } }
+
+        protected override void OnOrderUpdate(Order order, double limitPrice, double stopPrice, int quantity, int filled, double averageFillPrice,
+            OrderState orderState, DateTime time, ErrorCode error, string nativeError)
+        {
+            if (order == null) return;
+            if (orderState != OrderState.Rejected &amp;&amp; orderState != OrderState.Cancelled) return;
+            if (order.Name == exitPendingName) exitPending = false;
+            if (orderState != OrderState.Rejected) return;
+            DateTime t = ToEastern(time);
+            Rail(t, &quot;order rejected&quot;, order.Name + &quot;: &quot; + nativeError);
+            Say(string.Format(&quot;{0} ET: ORDER REJECTED {1}: {2}&quot;, T(t), order.Name, nativeError));
+            if (order.Name == &quot;Stop loss&quot; &amp;&amp; Position.MarketPosition != MarketPosition.Flat)
+            {
+                haltedToday = true;
+                Flatten(SafetyName, t, &quot;protective stop rejected&quot;);
+            }
+        }
+
+        protected override void OnExecutionUpdate(Execution execution, string executionId, double price, int quantity, MarketPosition marketPosition, string orderId, DateTime time)
+        {
+            if (execution.Order == null) return;
+            string name = execution.Order.Name;
+            DateTime t = ToEastern(execution.Time);
+            int q = execution.Quantity;
+            Row(&quot;kind&quot;, &quot;fill&quot;, &quot;date&quot;, D(t), &quot;time_et&quot;, T(t), &quot;action&quot;, name, &quot;price&quot;, F(execution.Price),
+                &quot;dir&quot;, execution.MarketPosition == MarketPosition.Long ? &quot;buy&quot; : &quot;sell&quot;, &quot;commission&quot;, F(execution.Commission),
+                &quot;qty&quot;, q.ToString(CultureInfo.InvariantCulture));
+            if (name == LongName)
+            {
+                if (openQty == 0) { openTime = t; openValue = openCommission = exitValue = exitCommission = 0; closedQty = 0; }
+                openQty += q; openValue += execution.Price * q; openCommission += execution.Commission;
+                double avg = openValue / openQty;
+                Say(string.Format(CultureInfo.InvariantCulture, &quot;{0} ET: filled long {1} at {2}. Stop {3} ({4} ticks).&quot;,
+                    T(t), openQty, F(avg), F(avg - openStopTicks * TickSize), openStopTicks));
+                return;
+            }
+            if (openQty &lt;= 0) return;
+            closedQty += q; exitValue += execution.Price * q; exitCommission += execution.Commission;
+            lastExitTime = t; lastExitName = name;
+            if (closedQty &lt; openQty) return;
+            WriteTradeRow();
+            openQty = closedQty = 0; exitPending = false;
+        }
+
+        #region Clock, helpers, CSV
+
+        private void StartClock()
+        {
+            if (clock != null || (Account != null &amp;&amp; Account.Name == &quot;Playback101&quot;)) return;
+            clock = new System.Timers.Timer(5000); clock.AutoReset = true; clock.Elapsed += OnClock; clock.Start();
+        }
+        private void StopClock() { if (clock == null) return; clock.Stop(); clock.Elapsed -= OnClock; clock.Dispose(); clock = null; }
+        private void OnClock(object s, System.Timers.ElapsedEventArgs e) { try { TriggerCustomEvent(ClockCheck, 0, null); } catch { } }
+        private void ClockCheck(object st)
+        {
+            if (State != State.Realtime || Position.MarketPosition == MarketPosition.Flat) return;
+            DateTime now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, eastern);
+            string outside = OutsideHoldWindow(now);
+            if (outside != null) Flatten(SafetyName, now, &quot;clock check: &quot; + outside);
+        }
+
+        private static bool IsAuto(string s) { return string.IsNullOrWhiteSpace(s) || s.Trim().Equals(&quot;auto&quot;, StringComparison.OrdinalIgnoreCase); }
+        private string ContractSuffix()
+        {
+            if (Instrument == null) return &quot;##-##&quot;;
+            string full = Instrument.FullName ?? &quot;&quot;;
+            int sp = full.IndexOf(&#x27; &#x27;);
+            return sp &gt; 0 &amp;&amp; sp + 1 &lt; full.Length ? full.Substring(sp + 1) : &quot;##-##&quot;;
+        }
+        private static bool InstrumentExists(string name) { if (name.Contains(&quot;##&quot;)) return true; try { return NinjaTrader.Cbi.Instrument.GetInstrument(name) != null; } catch { return false; } }
+        private static long ToTicks(double price, double ts) { return (long)Math.Round(price / ts); }
+        private DateTime ToEastern(DateTime t)
+        {
+            DateTime key = new DateTime(t.Year, t.Month, t.Day, t.Hour, 0, 0);
+            if (key != offsetKey)
+            {
+                offsetKey = key;
+                try { offsetToEastern = TimeZoneInfo.ConvertTime(DateTime.SpecifyKind(key, DateTimeKind.Unspecified), NinjaTrader.Core.Globals.GeneralOptions.TimeZoneInfo, eastern) - key; }
+                catch { offsetToEastern = TimeSpan.Zero; }
+            }
+            return t + offsetToEastern;
+        }
+        private static int ToMinute(int hhmm) { int h = hhmm / 100, m = hhmm % 100; return (hhmm &lt; 0 || m &gt; 59 || h &gt; 23) ? -1 : h * 60 + m; }
+        private static string Hhmm(int minute) { return string.Format(&quot;{0:00}:{1:00}&quot;, minute / 60, minute % 60); }
+        private void Say(string text) { if (!optimizing) Print(&quot;LongGammaDriftOpenSource: &quot; + text); }
+        private void Rail(DateTime tEt, string what, string note) { Row(&quot;kind&quot;, &quot;rail&quot;, &quot;date&quot;, D(tEt), &quot;time_et&quot;, T(tEt), &quot;action&quot;, what, &quot;note&quot;, note); }
+        private static string ExitReason(string n) { return n == FlatName ? &quot;flat 15:55&quot; : n == &quot;Stop loss&quot; ? &quot;stop&quot; : n == SafetyName ? &quot;safety flat&quot; : n == DailyLossName ? &quot;daily loss&quot; : n; }
+        private static string Csv(string s) { return (s ?? &quot;&quot;).Replace(&#x27;,&#x27;, &#x27;;&#x27;).Replace(&#x27;\n&#x27;, &#x27; &#x27;).Replace(&#x27;\r&#x27;, &#x27; &#x27;); }
+
+        private static readonly string[] Columns = { &quot;kind&quot;, &quot;date&quot;, &quot;time_et&quot;, &quot;action&quot;, &quot;dir&quot;, &quot;price&quot;, &quot;vwap&quot;, &quot;atr15_ticks&quot;,
+            &quot;stop_ticks&quot;, &quot;qty&quot;, &quot;entry_time_et&quot;, &quot;entry_price&quot;, &quot;exit_time_et&quot;, &quot;exit_price&quot;, &quot;exit_reason&quot;, &quot;gross_ticks&quot;, &quot;commission&quot;, &quot;pnl&quot;, &quot;note&quot; };
+
+        private void Row(params string[] pairs)
+        {
+            if (writer == null) return;
+            string[] cells = new string[Columns.Length];
+            for (int i = 0; i + 1 &lt; pairs.Length; i += 2) { int k = Array.IndexOf(Columns, pairs[i]); if (k &gt;= 0) cells[k] = Csv(pairs[i + 1]); }
+            writer.WriteLine(string.Join(&quot;,&quot;, cells));
+        }
+        private static string F(double x) { return double.IsNaN(x) ? &quot;&quot; : x.ToString(&quot;0.##########&quot;, CultureInfo.InvariantCulture); }
+        private static string D(DateTime t) { return t.ToString(&quot;yyyy-MM-dd&quot;, CultureInfo.InvariantCulture); }
+        private static string T(DateTime t) { return t.ToString(&quot;yyyy-MM-dd HH:mm:ss&quot;, CultureInfo.InvariantCulture); }
+
+        private void OpenCsv()
+        {
+            try
+            {
+                string dir = Path.Combine(NinjaTrader.Core.Globals.UserDataDir, &quot;OpenSourceEdge&quot;, &quot;Logs&quot;);
+                Directory.CreateDirectory(dir);
+                string inst = Instrument.FullName;
+                foreach (char ch in Path.GetInvalidFileNameChars()) inst = inst.Replace(ch, &#x27;_&#x27;);
+                string file = Path.Combine(dir, string.Format(&quot;longgamma_{0}_{1:yyyyMMdd_HHmmss}.csv&quot;, inst.Replace(&#x27; &#x27;, &#x27;_&#x27;), DateTime.Now));
+                writer = new StreamWriter(file, false);
+                writer.WriteLine(string.Join(&quot;,&quot;, Columns));
+                Say(&quot;log file &quot; + file);
+            }
+            catch (Exception ex) { writer = null; Say(&quot;could not open CSV: &quot; + ex.Message); }
+        }
+
+        private void WriteRunRow()
+        {
+            if (BarsArray[TickIndex].Count == 0) Say(&quot;WARNING: 1-tick series has no data.&quot;);
+            if (BarsArray[EsIndex].Count == 0) Say(&quot;WARNING: ES reference series &quot; + esName + &quot; has no data.&quot;);
+            if (writer == null) return;
+            Row(&quot;kind&quot;, &quot;run&quot;, &quot;note&quot;, string.Format(CultureInfo.InvariantCulture,
+                &quot;instrument={0};es={1};qty={2};check={3};exit={4};stop_mult={5};min_stop={6};max_stop_pts={7};skip_fomc={8};csv={9};dll={10}&quot;,
+                Instrument.FullName, BarsArray[EsIndex].Instrument.FullName, Quantity, Hhmm(checkMinute), Hhmm(exitMinute),
+                StopAtrMultiple, MinStopTicks, MaxStopPoints, SkipFomcDays ? 1 : 0, resolvedCsvPath, MaxDailyLossDollars));
+        }
+
+        private void WriteDecisionRow(DateTime barEnd, LgDecision ev, string action, string note)
+        {
+            if (writer == null) return;
+            Row(&quot;kind&quot;, &quot;decision&quot;, &quot;date&quot;, D(ev.Date), &quot;time_et&quot;, T(barEnd), &quot;action&quot;, action, &quot;dir&quot;, ev.Dir.ToString(CultureInfo.InvariantCulture),
+                &quot;price&quot;, ev.CloseTicks &gt; 0 ? F(ev.CloseTicks * TickSize) : &quot;&quot;,
+                &quot;vwap&quot;, !double.IsNaN(ev.VwapTicks) ? F(ev.VwapTicks * TickSize) : &quot;&quot;,
+                &quot;atr15_ticks&quot;, ev.Atr15Ticks &gt; 0 ? F(ev.Atr15Ticks) : &quot;&quot;,
+                &quot;stop_ticks&quot;, ev.StopTicks &gt; 0 ? ev.StopTicks.ToString(CultureInfo.InvariantCulture) : &quot;&quot;, &quot;note&quot;, note);
+        }
+
+        private void WriteTradeRow()
+        {
+            tradesLogged++;
+            double entry = openValue / openQty, exit = exitValue / closedQty;
+            double grossTicks = (exit - entry) * openQty / TickSize;
+            double commission = openCommission + exitCommission;
+            double pnl = (exitValue - openValue) * Instrument.MasterInstrument.PointValue - commission;
+            realizedToday += pnl;
+            Say(string.Format(CultureInfo.InvariantCulture, &quot;{0} ET: closed long {1} ({2}): {3} contract-ticks, ${4:0.00} after ${5:0.00} commission.&quot;,
+                T(lastExitTime), openQty, ExitReason(lastExitName), F(Math.Round(grossTicks, 2)), pnl, commission));
+            if (writer == null) return;
+            Row(&quot;kind&quot;, &quot;trade&quot;, &quot;date&quot;, D(openTime), &quot;dir&quot;, &quot;long&quot;, &quot;qty&quot;, openQty.ToString(CultureInfo.InvariantCulture),
+                &quot;entry_time_et&quot;, T(openTime), &quot;entry_price&quot;, F(entry), &quot;stop_ticks&quot;, openStopTicks.ToString(CultureInfo.InvariantCulture),
+                &quot;exit_time_et&quot;, T(lastExitTime), &quot;exit_price&quot;, F(exit), &quot;exit_reason&quot;, ExitReason(lastExitName),
+                &quot;gross_ticks&quot;, F(Math.Round(grossTicks, 4)), &quot;commission&quot;, F(commission),
+                &quot;pnl&quot;, pnl.ToString(&quot;0.00&quot;, CultureInfo.InvariantCulture), &quot;note&quot;, openNote);
+            writer.Flush();
+        }
+
+        #endregion
+
+        #region Properties
+
+        [NinjaScriptProperty, Range(1, 20)]
+        [Display(Name = &quot;Quantity&quot;, Order = 1, GroupName = &quot;1. Signal&quot;)]
+        public int Quantity { get; set; }
+
+        [NinjaScriptProperty, Range(1200, 1500)]
+        [Display(Name = &quot;Check time ET (HHMM)&quot;, Description = &quot;1300 is the research default (plateau 1230 to 1315).&quot;, Order = 2, GroupName = &quot;1. Signal&quot;)]
+        public int CheckTimeEt { get; set; }
+
+        [NinjaScriptProperty, Range(1305, 1555)]
+        [Display(Name = &quot;Exit time ET (HHMM)&quot;, Order = 1, GroupName = &quot;2. Stop and Exits&quot;)]
+        public int ExitTimeEt { get; set; }
+
+        [NinjaScriptProperty, Range(0.5, 10.0)]
+        [Display(Name = &quot;Stop (ATR15 multiple)&quot;, Order = 2, GroupName = &quot;2. Stop and Exits&quot;)]
+        public double StopAtrMultiple { get; set; }
+
+        [NinjaScriptProperty, Range(4, 200)]
+        [Display(Name = &quot;Min stop (ticks)&quot;, Order = 3, GroupName = &quot;2. Stop and Exits&quot;)]
+        public int MinStopTicks { get; set; }
+
+        [NinjaScriptProperty, Range(0, 100000)]
+        [Display(Name = &quot;Max stop (points)&quot;, Order = 4, GroupName = &quot;2. Stop and Exits&quot;)]
+        public double MaxStopPoints { get; set; }
+
+        [NinjaScriptProperty]
+        [Display(Name = &quot;Skip FOMC days&quot;, Description = &quot;Pause on scheduled Fed FOMC decision days.&quot;, Order = 1, GroupName = &quot;3. Regime and Filters&quot;)]
+        public bool SkipFomcDays { get; set; }
+
+        [NinjaScriptProperty]
+        [Display(Name = &quot;Skip QQQ call frenzy (optional CSV)&quot;, Description = &quot;Skips entry if qqq_pcvol_p60 &lt;= threshold. Ignored if column absent.&quot;, Order = 2, GroupName = &quot;3. Regime and Filters&quot;)]
+        public bool SkipQqqCallFrenzy { get; set; }
+
+        [NinjaScriptProperty, Range(0.05, 0.50)]
+        [Display(Name = &quot;QQQ call frenzy max pct&quot;, Order = 3, GroupName = &quot;3. Regime and Filters&quot;)]
+        public double QqqCallFrenzyMaxPct { get; set; }
+
+        [NinjaScriptProperty]
+        [Display(Name = &quot;Skip VIX9D/VIX &gt;= 1.05 (optional CSV)&quot;, Description = &quot;Skips entry when short-term volatility is inverted. Ignored if column absent.&quot;, Order = 4, GroupName = &quot;3. Regime and Filters&quot;)]
+        public bool SkipVix9dInverted { get; set; }
+
+        [NinjaScriptProperty, Range(0.80, 2.00)]
+        [Display(Name = &quot;VIX9D/VIX veto threshold&quot;, Order = 5, GroupName = &quot;3. Regime and Filters&quot;)]
+        public double MaxVix9dRatio { get; set; }
+
+        [NinjaScriptProperty]
+        [Display(Name = &quot;Regime CSV path&quot;, Description = &quot;Blank uses Documents\\NinjaTrader 8\\OpenSourceEdge\\daily_regime.csv.&quot;, Order = 6, GroupName = &quot;3. Regime and Filters&quot;)]
+        public string RegimeCsvPath { get; set; }
+
+        [NinjaScriptProperty]
+        [Display(Name = &quot;ES instrument&quot;, Description = &quot;Blank or auto matches the chart contract month (e.g. ES 12-26).&quot;, Order = 7, GroupName = &quot;3. Regime and Filters&quot;)]
+        public string EsInstrument { get; set; }
+
+        [NinjaScriptProperty]
+        [Display(Name = &quot;Extra FOMC dates (YYYY-MM-DD)&quot;, Order = 8, GroupName = &quot;3. Regime and Filters&quot;)]
+        public string ExtraFomcDates { get; set; }
+
+        [NinjaScriptProperty, Range(0, 100000)]
+        [Display(Name = &quot;Max daily loss ($)&quot;, Order = 1, GroupName = &quot;4. Safety&quot;)]
+        public double MaxDailyLossDollars { get; set; }
+
+        [NinjaScriptProperty]
+        [Display(Name = &quot;Allow other instruments&quot;, Order = 2, GroupName = &quot;4. Safety&quot;)]
+        public bool AllowOtherInstruments { get; set; }
+
+        [NinjaScriptProperty]
+        [Display(Name = &quot;Allow shared account positions&quot;, Order = 3, GroupName = &quot;4. Safety&quot;)]
+        public bool AllowSharedAccountPositions { get; set; }
+
+        [NinjaScriptProperty]
+        [Display(Name = &quot;Block opposing account position&quot;, Order = 4, GroupName = &quot;4. Safety&quot;)]
+        public bool BlockOpposingAccountPosition { get; set; }
+
+        [NinjaScriptProperty]
+        [Display(Name = &quot;Write CSV log&quot;, Order = 1, GroupName = &quot;5. Output&quot;)]
+        public bool WriteCsv { get; set; }
+
+        #endregion
+    }
+}
+
+// CORE-BEGIN
+namespace NinjaTrader.NinjaScript.Strategies.OpenSourceEdgeLgCore
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Globalization;
+    using System.IO;
+
+    public sealed class LgRegimeRow
+    {
+        public double SpotD1 = double.NaN;
+        public double D14GammaFlip = double.NaN;
+        public double AllGammaFlip = double.NaN;
+        public double D14NetGexB = double.NaN;
+        public double QqqPcVolP60 = double.NaN;
+        public double Vix9dVix = double.NaN;
+        public bool IsFomc;
+    }
+
+    public sealed class LgRegimeTable
+    {
+        private readonly string path;
+        private DateTime lastWrite = DateTime.MinValue;
+        private readonly Dictionary&lt;DateTime, LgRegimeRow&gt; rows = new Dictionary&lt;DateTime, LgRegimeRow&gt;();
+
+        public LgRegimeTable(string csvPath) { path = csvPath ?? &quot;&quot;; }
+        public int Count { get { return rows.Count; } }
+
+        public void ReloadIfChanged()
+        {
+            if (string.IsNullOrWhiteSpace(path) || !File.Exists(path)) return;
+            try
+            {
+                DateTime wt = File.GetLastWriteTimeUtc(path);
+                if (wt == lastWrite &amp;&amp; rows.Count &gt; 0) return;
+                lastWrite = wt;
+                rows.Clear();
+                using (FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (StreamReader sr = new StreamReader(fs))
+                {
+                    string header = sr.ReadLine();
+                    if (header == null) return;
+                    string[] cols = header.Split(&#x27;,&#x27;);
+                    int iDate = Col(cols, &quot;date&quot;), iSpot = Col(cols, &quot;spot_d1&quot;), iGf14 = Col(cols, &quot;d14_gamma_flip&quot;),
+                        iGfa = Col(cols, &quot;all_gamma_flip&quot;), iNg14 = Col(cols, &quot;d14_net_gex_b&quot;),
+                        iQqq = Col(cols, &quot;qqq_pcvol_p60&quot;), iV9 = Col(cols, &quot;vix9d_vix&quot;), iFomc = Col(cols, &quot;is_fomc&quot;);
+                    if (iDate &lt; 0) return;
+                    string line;
+                    while ((line = sr.ReadLine()) != null)
+                    {
+                        if (string.IsNullOrWhiteSpace(line)) continue;
+                        string[] f = line.Split(&#x27;,&#x27;);
+                        DateTime d;
+                        if (iDate &gt;= f.Length || !DateTime.TryParseExact(f[iDate].Trim(), &quot;yyyy-MM-dd&quot;, CultureInfo.InvariantCulture, DateTimeStyles.None, out d)) continue;
+                        LgRegimeRow r = new LgRegimeRow();
+                        r.SpotD1 = ParseD(f, iSpot);
+                        r.D14GammaFlip = ParseD(f, iGf14);
+                        r.AllGammaFlip = ParseD(f, iGfa);
+                        r.D14NetGexB = ParseD(f, iNg14);
+                        r.QqqPcVolP60 = ParseD(f, iQqq);
+                        r.Vix9dVix = ParseD(f, iV9);
+                        r.IsFomc = iFomc &gt;= 0 &amp;&amp; iFomc &lt; f.Length &amp;&amp; f[iFomc].Trim() == &quot;1&quot;;
+                        rows[d.Date] = r;
+                    }
+                }
+            }
+            catch { }
+        }
+
+        public LgRegimeRow Get(DateTime day) { LgRegimeRow r; return rows.TryGetValue(day.Date, out r) ? r : null; }
+
+        private static int Col(string[] cols, string name)
+        {
+            for (int i = 0; i &lt; cols.Length; i++) if (cols[i].Trim().Equals(name, StringComparison.OrdinalIgnoreCase)) return i;
+            return -1;
+        }
+        private static double ParseD(string[] f, int idx)
+        {
+            double v;
+            if (idx &lt; 0 || idx &gt;= f.Length) return double.NaN;
+            return double.TryParse(f[idx].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out v) ? v : double.NaN;
+        }
+    }
+
+    public sealed class LgAtr15
+    {
+        private readonly Queue&lt;long&gt; trs = new Queue&lt;long&gt;();
+        private long trSum, prevC, curBucket, bh, bl, bc;
+        private bool hasPrevC, hasBucket;
+
+        public double Value { get { return trs.Count &gt;= 5 ? (double)trSum / trs.Count : 0.0; } }
+        private void PushTr(long tr) { trs.Enqueue(tr); trSum += tr; if (trs.Count &gt; 14) trSum -= trs.Dequeue(); }
+
+        public void FlushSession()
+        {
+            if (hasBucket)
+            {
+                PushTr(hasPrevC ? Math.Max(bh - bl, Math.Max(Math.Abs(bh - prevC), Math.Abs(bl - prevC))) : (bh - bl));
+                prevC = bc; hasPrevC = true; hasBucket = false;
+            }
+        }
+
+        public double Push(int etMin, long h, long l, long c)
+        {
+            int b = (int)Math.Floor((etMin - 1) / 15.0);
+            if (!hasBucket) { hasBucket = true; curBucket = b; bh = h; bl = l; bc = c; }
+            else if (b != curBucket)
+            {
+                PushTr(hasPrevC ? Math.Max(bh - bl, Math.Max(Math.Abs(bh - prevC), Math.Abs(bl - prevC))) : (bh - bl));
+                prevC = bc; hasPrevC = true; curBucket = b; bh = h; bl = l; bc = c;
+            }
+            else { if (h &gt; bh) bh = h; if (l &lt; bl) bl = l; bc = c; }
+            if (etMin % 15 == 0)
+            {
+                PushTr(hasPrevC ? Math.Max(bh - bl, Math.Max(Math.Abs(bh - prevC), Math.Abs(bl - prevC))) : (bh - bl));
+                prevC = bc; hasPrevC = true; hasBucket = false;
+            }
+            return Value;
+        }
+    }
+
+    public sealed class LgDecision
+    {
+        public string Kind = &quot;decision&quot;;
+        public DateTime Date;
+        public string Action = &quot;&quot;;
+        public string Reason = &quot;&quot;;
+        public int Dir;
+        public long CloseTicks, EsOpenTicks;
+        public double MappedFlipTicks = double.NaN;
+        public double VwapTicks = double.NaN;
+        public double Atr15Ticks;
+        public int StopTicks;
+    }
+
+    public sealed class LgCore
+    {
+        public const int RthOpen = 9 * 60 + 30;
+        public const int RthClose = 16 * 60;
+        public const int MinRthBars = 331;
+
+        private static readonly HashSet&lt;DateTime&gt; BuiltinFomc = BuildFomcSet();
+
+        private static HashSet&lt;DateTime&gt; BuildFomcSet()
+        {
+            string[] raw = {
+                &quot;2019-01-30&quot;,&quot;2019-03-20&quot;,&quot;2019-05-01&quot;,&quot;2019-06-19&quot;,&quot;2019-07-31&quot;,&quot;2019-09-18&quot;,&quot;2019-10-30&quot;,&quot;2019-12-11&quot;,
+                &quot;2020-01-29&quot;,&quot;2020-04-29&quot;,&quot;2020-06-10&quot;,&quot;2020-07-29&quot;,&quot;2020-09-16&quot;,&quot;2020-11-05&quot;,&quot;2020-12-16&quot;,
+                &quot;2021-01-27&quot;,&quot;2021-03-17&quot;,&quot;2021-04-28&quot;,&quot;2021-06-16&quot;,&quot;2021-07-28&quot;,&quot;2021-09-22&quot;,&quot;2021-11-03&quot;,&quot;2021-12-15&quot;,
+                &quot;2022-01-26&quot;,&quot;2022-03-16&quot;,&quot;2022-05-04&quot;,&quot;2022-06-15&quot;,&quot;2022-07-27&quot;,&quot;2022-09-21&quot;,&quot;2022-11-02&quot;,&quot;2022-12-14&quot;,
+                &quot;2023-02-01&quot;,&quot;2023-03-22&quot;,&quot;2023-05-03&quot;,&quot;2023-06-14&quot;,&quot;2023-07-26&quot;,&quot;2023-09-20&quot;,&quot;2023-11-01&quot;,&quot;2023-12-13&quot;,
+                &quot;2024-01-31&quot;,&quot;2024-03-20&quot;,&quot;2024-05-01&quot;,&quot;2024-06-12&quot;,&quot;2024-07-31&quot;,&quot;2024-09-18&quot;,&quot;2024-11-07&quot;,&quot;2024-12-18&quot;,
+                &quot;2025-01-29&quot;,&quot;2025-03-19&quot;,&quot;2025-05-07&quot;,&quot;2025-06-18&quot;,&quot;2025-07-30&quot;,&quot;2025-09-17&quot;,&quot;2025-10-29&quot;,&quot;2025-12-10&quot;,
+                &quot;2026-01-28&quot;,&quot;2026-03-18&quot;,&quot;2026-04-29&quot;,&quot;2026-06-17&quot;,&quot;2026-07-29&quot;,&quot;2026-09-16&quot;,&quot;2026-10-28&quot;,&quot;2026-12-09&quot;
+            };
+            HashSet&lt;DateTime&gt; s = new HashSet&lt;DateTime&gt;();
+            for (int i = 0; i &lt; raw.Length; i++) s.Add(DateTime.ParseExact(raw[i], &quot;yyyy-MM-dd&quot;, CultureInfo.InvariantCulture));
+            return s;
+        }
+
+        public int CheckMinute = 13 * 60;
+        public int MaxCheckLag = 3;
+        public int ExitMinute = 15 * 60 + 55;
+        public double StopAtrMult = 2.0;
+        public int MinStopTicks = 16;
+        public int MaxStopTicks;
+        public bool SkipFomcDays = true;
+        public bool SkipQqqCallFrenzy;
+        public double QqqCallFrenzyMaxPct = 0.15;
+        public bool SkipVix9dInverted;
+        public double MaxVix9dRatio = 1.05;
+        public Func&lt;DateTime, LgRegimeRow&gt; RegimeLookup;
+
+        public readonly List&lt;LgDecision&gt; Events = new List&lt;LgDecision&gt;();
+        public DateTime Day = DateTime.MinValue;
+        public int StudyDays, SignalDays;
+
+        private readonly LgAtr15 atr15 = new LgAtr15();
+        private readonly HashSet&lt;DateTime&gt; extraFomc = new HashSet&lt;DateTime&gt;();
+
+        private DateTime esDay = DateTime.MinValue;
+        private int esRthBars;
+        private bool esHasOpen, esHasClose, hasEsPdc;
+        private long esOpen930, esLastRthClose, esPdc;
+
+        private int rthBars, checkMin;
+        private bool hasOpen, hasClose, decided, flatDone, hasCheck;
+        private long checkClose;
+        private double checkVwap = double.NaN, checkAtr;
+        private double cumPv, cumV;
+
+        public void SetExtraFomcDates(string csvDates)
+        {
+            extraFomc.Clear();
+            if (string.IsNullOrWhiteSpace(csvDates)) return;
+            string[] parts = csvDates.Split(new[] { &#x27;,&#x27;, &#x27;;&#x27;, &#x27; &#x27;, &#x27;\r&#x27;, &#x27;\n&#x27; }, StringSplitOptions.RemoveEmptyEntries);
+            for (int i = 0; i &lt; parts.Length; i++)
+            {
+                DateTime d;
+                if (DateTime.TryParseExact(parts[i].Trim(), &quot;yyyy-MM-dd&quot;, CultureInfo.InvariantCulture, DateTimeStyles.None, out d))
+                    extraFomc.Add(d.Date);
+            }
+        }
+
+        public static DateTime SessionDate(DateTime endEt) { return endEt.AddMinutes(-1).AddHours(6).Date; }
+        public static int MinuteOf(DateTime endEt, DateTime day) { return (int)Math.Round((endEt - day).TotalMinutes); }
+
+        public void OnEsBar(DateTime endEt, long o, long c)
+        {
+            DateTime sd = SessionDate(endEt);
+            if (sd.DayOfWeek == DayOfWeek.Saturday || sd.DayOfWeek == DayOfWeek.Sunday) return;
+            if (sd &lt; esDay) return;
+            if (sd &gt; esDay)
+            {
+                if (esDay != DateTime.MinValue &amp;&amp; esRthBars &gt;= MinRthBars &amp;&amp; esHasOpen &amp;&amp; esHasClose)
+                {
+                    esPdc = esLastRthClose;
+                    hasEsPdc = true;
+                }
+                esDay = sd;
+                esRthBars = 0;
+                esHasOpen = esHasClose = false;
+                esOpen930 = esLastRthClose = 0;
+            }
+            int e = MinuteOf(endEt, sd);
+            if (e &gt; RthOpen &amp;&amp; e &lt;= RthClose)
+            {
+                if (esRthBars == 0) esOpen930 = o;
+                esRthBars++;
+                if (e &gt;= RthOpen + 1 &amp;&amp; e &lt;= RthOpen + 5) esHasOpen = true;
+                if (e &gt;= RthClose - 5 &amp;&amp; e &lt;= RthClose) esHasClose = true;
+                esLastRthClose = c;
+            }
+        }
+
+        public void OnBar(DateTime endEt, long o, long h, long l, long c, double volume)
+        {
+            Events.Clear();
+            DateTime sd = SessionDate(endEt);
+            if (sd.DayOfWeek == DayOfWeek.Saturday || sd.DayOfWeek == DayOfWeek.Sunday) return;
+            if (sd &lt; Day) return;
+            if (sd &gt; Day)
+            {
+                FinishDay();
+                Day = sd;
+                rthBars = 0;
+                hasOpen = hasClose = decided = flatDone = hasCheck = false;
+                checkMin = int.MinValue;
+                checkClose = 0; checkVwap = double.NaN; checkAtr = 0;
+                cumPv = cumV = 0;
+            }
+
+            int e = MinuteOf(endEt, sd);
+            if (e &gt; 16 * 60 + 15) return;
+
+            double a15 = atr15.Push(e, h, l, c);
+            if (e &lt;= RthOpen) return;
+
+            if (!decided &amp;&amp; e &gt; CheckMinute) Decide();
+            if (!flatDone &amp;&amp; e &gt;= ExitMinute)
+            {
+                flatDone = true;
+                LgDecision fl = new LgDecision();
+                fl.Kind = &quot;flat&quot;;
+                fl.Date = Day;
+                Events.Add(fl);
+            }
+
+            if (e &lt;= RthClose)
+            {
+                rthBars++;
+                if (e &gt;= RthOpen + 1 &amp;&amp; e &lt;= RthOpen + 5) hasOpen = true;
+                if (e &gt;= RthClose - 5 &amp;&amp; e &lt;= RthClose) hasClose = true;
+
+                double tp = ((double)h + (double)l + (double)c) / 3.0;
+                double v = volume &gt; 0 ? volume : 0.0;
+                cumPv += tp * v;
+                cumV += v;
+                double vwap = cumV &gt; 0 ? cumPv / cumV : tp;
+
+                if (e &lt;= CheckMinute &amp;&amp; e &gt;= CheckMinute - MaxCheckLag)
+                {
+                    checkMin = e;
+                    checkClose = c;
+                    checkVwap = vwap;
+                    checkAtr = a15;
+                    hasCheck = true;
+                }
+                if (!decided &amp;&amp; e == CheckMinute) Decide();
+            }
+        }
+
+        private void Decide()
+        {
+            decided = true;
+            LgDecision ev = new LgDecision();
+            ev.Kind = &quot;decision&quot;;
+            ev.Date = Day;
+            LgRegimeRow row = RegimeLookup != null ? RegimeLookup(Day) : null;
+
+            if (SkipFomcDays &amp;&amp; (BuiltinFomc.Contains(Day) || extraFomc.Contains(Day) || (row != null &amp;&amp; row.IsFomc)))
+            {
+                ev.Action = &quot;skip&quot;; ev.Reason = &quot;FOMC decision day&quot;;
+                Events.Add(ev); return;
+            }
+            if (row == null)
+            {
+                ev.Action = &quot;skip&quot;; ev.Reason = &quot;no regime row in CSV for today&quot;;
+                Events.Add(ev); return;
+            }
+            if (!hasEsPdc || esDay != Day || esOpen930 &lt;= 0)
+            {
+                ev.Action = &quot;skip&quot;; ev.Reason = &quot;missing ES prior close or 09:30 open&quot;;
+                Events.Add(ev); return;
+            }
+            double mappedFlip = double.NaN;
+            if (!double.IsNaN(row.SpotD1) &amp;&amp; row.SpotD1 &gt; 0)
+            {
+                if (!double.IsNaN(row.D14GammaFlip) &amp;&amp; row.D14GammaFlip &gt; 0)
+                    mappedFlip = (double)esPdc * (row.D14GammaFlip / row.SpotD1);
+                else if (!double.IsNaN(row.AllGammaFlip) &amp;&amp; row.AllGammaFlip &gt; 0)
+                    mappedFlip = (double)esPdc * (row.AllGammaFlip / row.SpotD1);
+            }
+            ev.EsOpenTicks = esOpen930;
+            ev.MappedFlipTicks = mappedFlip;
+            int reg = !double.IsNaN(mappedFlip) ? ((double)esOpen930 &gt; mappedFlip ? 1 : -1)
+                : (!double.IsNaN(row.D14NetGexB) ? (row.D14NetGexB &gt; 0 ? 1 : -1) : 0);
+            if (reg != 1)
+            {
+                ev.Action = &quot;no signal&quot;; ev.Reason = &quot;ES open not above mapped SPX Gamma Flip&quot;;
+                Events.Add(ev); return;
+            }
+            if (SkipQqqCallFrenzy &amp;&amp; !double.IsNaN(row.QqqPcVolP60) &amp;&amp; row.QqqPcVolP60 &lt;= QqqCallFrenzyMaxPct)
+            {
+                ev.Action = &quot;skip&quot;; ev.Reason = &quot;QQQ call frenzy veto&quot;;
+                Events.Add(ev); return;
+            }
+            if (SkipVix9dInverted &amp;&amp; !double.IsNaN(row.Vix9dVix) &amp;&amp; row.Vix9dVix &gt;= MaxVix9dRatio)
+            {
+                ev.Action = &quot;skip&quot;; ev.Reason = &quot;VIX9D/VIX inversion veto&quot;;
+                Events.Add(ev); return;
+            }
+            if (!hasCheck || checkMin &lt; CheckMinute - MaxCheckLag || checkAtr &lt;= 0 || double.IsNaN(checkVwap))
+            {
+                ev.Action = &quot;skip&quot;; ev.Reason = &quot;missing 13:00 bar or ATR15 not ready&quot;;
+                Events.Add(ev); return;
+            }
+            ev.CloseTicks = checkClose;
+            ev.VwapTicks = checkVwap;
+            ev.Atr15Ticks = checkAtr;
+            if ((double)checkClose &lt;= checkVwap)
+            {
+                ev.Action = &quot;no signal&quot;; ev.Reason = &quot;13:00 close at or below RTH VWAP&quot;;
+                Events.Add(ev); return;
+            }
+
+            int rawStop = Math.Max(MinStopTicks, (int)Math.Round(StopAtrMult * checkAtr));
+            ev.StopTicks = MaxStopTicks &gt; 0 ? Math.Min(rawStop, MaxStopTicks) : rawStop;
+            ev.Dir = 1;
+            ev.Action = &quot;signal&quot;;
+            SignalDays++;
+            Events.Add(ev);
+        }
+
+        private void FinishDay()
+        {
+            if (Day == DateTime.MinValue) return;
+            atr15.FlushSession();
+            if (rthBars &gt;= MinRthBars &amp;&amp; hasOpen &amp;&amp; hasClose) StudyDays++;
+        }
+    }
+}
+// CORE-END</pre>
+      </details>
+
+      <details>
+        <summary>View Gemini 4 Neon Stress-Test &amp; Port Prompt</summary>
+        <pre class="mono" id="prompt-src">Here&#x27;s the Long-Gamma Afternoon Drift strategy (NinjaScript / PineScript).
+
+Do one of the following based on what I ask next:
+1. PORT: Translate this exact logic into [Python / Sierra Chart ACSIL / TradeStation EasyLanguage / QuantConnect] with zero lookahead, a 2.0x ATR(15m) hard stop, FOMC skip, and a 15:55 ET session flatten.
+2. STRESS-TEST: Write a Python validation script for my own futures + GEX CSV data that tests:
+   - 1-tick and 2-tick slippage per side plus realistic commissions
+   - Year-by-year net profit and max drawdown
+   - Opposite-regime placebo (Open &lt; Gamma Flip)
+   - Time plateau (12:30, 12:45, 13:00, 13:15 ET) and stop plateau (1.5x to 2.5x ATR)
+   - Outlier check (strip the top 3 best days)
+
+Don&#x27;t optimize parameters to make the equity curve prettier. Tell me bluntly if it breaks.</pre>
+      </details>
+    </section>
+
+    <section class="card">
+      <div class="section-label mono">Strategy Graveyard · Fallen Units</div>
+      <h2>6-Pool Cheese That Died Under Real Ticks</h2>
+      <p class="lead">Popular retail myths tested across 8 years, real slippage, and blind out-of-sample data.</p>
+
+      <div class="grave-grid">
+        <div class="grave-item">
+          <div class="tag-dead mono">Died Gross</div>
+          <h3>ICT / SMC Setups</h3>
+          <p>iFVG, SMT divergence, session sweeps, and lunch fades lost money before commissions. Pure 6-pool cheese.</p>
+        </div>
+        <div class="grave-item">
+          <div class="tag-dead mono">1B+ Real Ticks</div>
+          <h3>Order Flow &amp; CVD</h3>
+          <p>CVD divergence, delta thrusts, and absorption lost to plain price out-of-sample.</p>
+        </div>
+        <div class="grave-item">
+          <div class="tag-dead mono">2023 Regime Break</div>
+          <h3>Power-Hour &amp; $TICK</h3>
+          <p>Both printed from 2019 to 2022, then inverted completely after daily 0DTE options arrived.</p>
+        </div>
+        <div class="grave-item">
+          <div class="tag-dead mono">Microstructure Math</div>
+          <h3>20.2% Friction on ZN</h3>
+          <p>1-tick slippage + commissions eats 20.2% of a normal 10Y Bond stop vs 1.26% on MNQ.</p>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div>MIT License · Educational research and open-source code only. Not financial advice.</div>
+      <div class="mono">@OpenSourceEdge</div>
+    </footer>
+  </div>
+
+  <script>
+    function copyBlock(id, btn) {
+      const text = document.getElementById(id).textContent;
+      const original = btn.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = "Copied to clipboard";
+        setTimeout(() => { btn.textContent = original; }, 1800);
+      }).catch(() => {
+        const ta = document.createElement("textarea");
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        btn.textContent = "Copied to clipboard";
+        setTimeout(() => { btn.textContent = original; }, 1800);
+      });
+    }
+  </script>
+</body>
+</html>
