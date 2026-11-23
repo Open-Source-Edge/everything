@@ -14,29 +14,15 @@
 //    zero external files. Note: the primary 8-year research used strike-level
 //    SPX 14-DTE Gamma Flip (32M OPRA rows).
 // 2. "Live Manual Gamma Flip" [Recommended for Daily Live Alerts]:
-//    Enter today's pre-market SPX Gamma Flip (or toggle Positive Gamma Today)
-//    each morning before 09:30 ET. Fires clean 13:00 ET entry + stop alerts
-//    and 15:55 ET exit alerts for 10-second manual prop-firm execution.
+//    Toggle Positive Gamma Today before 09:30 ET. Fires clean 13:00 ET entry
+//    + hard stop alerts and 15:55 ET flat alerts for 10-second prop clicks.
 // ============================================================================
 
-strategy(
-    "OpenSourceEdge: Shield Battery (Long-Gamma 13:00)",
-    shorttitle = "OSE Shield Battery",
-    overlay = true,
-    initial_capital = 50000,
-    default_qty_type = strategy.fixed,
-    default_qty_value = 1,
-    commission_type = strategy.commission.cash_per_contract,
-    commission_value = 0.62,
-    slippage = 1,
-    calc_on_every_tick = false,
-    process_orders_on_close = false
-)
+strategy("OpenSourceEdge: Shield Battery (Long-Gamma 13:00)", shorttitle = "OSE Shield Battery", overlay = true, initial_capital = 50000, default_qty_type = strategy.fixed, default_qty_value = 1, commission_type = strategy.commission.cash_per_contract, commission_value = 0.62, slippage = 1, calc_on_every_tick = false, process_orders_on_close = false)
 
 // --- Inputs ---
 grpReg = "1. Dealer Gamma Regime"
-regimeMode     = input.string("Auto Free Proxy (VIX/VIX3M)", "Regime Mode",
-                 options = ["Auto Free Proxy (VIX/VIX3M)", "Live Manual Gamma Flip"], group = grpReg)
+regimeMode     = input.string("Auto Free Proxy (VIX/VIX3M)", "Regime Mode", options = ["Auto Free Proxy (VIX/VIX3M)", "Live Manual Gamma Flip"], group = grpReg)
 vixRatioMax    = input.float(0.98, "Proxy: Max Prior-Day VIX/VIX3M", step = 0.01, minval = 0.70, maxval = 1.20, group = grpReg)
 useVix9dVeto   = input.bool(true, "Skip VIX9D/VIX >= 1.05 (Short-Term Vol Stress)", group = grpReg)
 vix9dMax       = input.float(1.05, "Max Prior-Day VIX9D/VIX", step = 0.01, minval = 0.80, maxval = 1.50, group = grpReg)
@@ -75,34 +61,27 @@ etMin    = minute(time_close, "America/New_York")
 etTotalM = etHour * 60 + etMin
 dayKey   = etYear * 10000 + etMonth * 100 + etDay
 
-isRth = etTotalM > (9 * 60 + 30) and etTotalM <= (16 * 60)
+isRth       = etTotalM > (9 * 60 + 30) and etTotalM <= (16 * 60)
 isNewRthDay = isRth and not isRth[1] and (na(dayKey[1]) or dayKey != dayKey[1] or etTotalM <= 9 * 60 + 35)
 
 // Built-in Scheduled FOMC Decision Dates (2024-2026)
-f_isFomc(int dk) =>
-    dk == 20240131 or dk == 20240320 or dk == 20240501 or dk == 20240612 or
-    dk == 20240731 or dk == 20240918 or dk == 20241107 or dk == 20241218 or
-    dk == 20250129 or dk == 20250319 or dk == 20250507 or dk == 20250618 or
-    dk == 20250730 or dk == 20250917 or dk == 20251029 or dk == 20251210 or
-    dk == 20260128 or dk == 20260318 or dk == 20260429 or dk == 20260617 or
-    dk == 20260729 or dk == 20260916 or dk == 20261028 or dk == 20261209
-
-isFomcDay = skipFomc and f_isFomc(dayKey)
+var array<int> fomcDates = array.from(20240131, 20240320, 20240501, 20240612, 20240731, 20240918, 20241107, 20241218, 20250129, 20250319, 20250507, 20250618, 20250730, 20250917, 20251029, 20251210, 20260128, 20260318, 20260429, 20260617, 20260729, 20260916, 20261028, 20261209)
+isFomcDay = skipFomc and array.includes(fomcDates, dayKey)
 
 // --- RTH VWAP Calculation (Anchored strictly at 09:30 ET) ---
-var float cumPV = na
-var float cumV  = na
+var float cumPV       = na
+var float cumV        = na
 var bool  tradedToday = false
 var float activeStop  = na
 
 if isNewRthDay
-    cumPV := 0.0
-    cumV  := 0.0
+    cumPV       := 0.0
+    cumV        := 0.0
     tradedToday := false
     activeStop  := na
 
 if isRth
-    tp = (high + low + close) / 3.0
+    tp  = (high + low + close) / 3.0
     vol = math.max(volume, 0.0)
     cumPV += tp * vol
     cumV  += vol
@@ -131,18 +110,17 @@ if maxStopPoints > 0 and not na(stopDist)
 longSignal = isCheckBar and not tradedToday and strategy.position_size == 0 and regimeAllowed and not na(rthVwap) and close > rthVwap and not na(stopDist)
 
 if longSignal
-    stopPrice = close - stopDist
-    activeStop := stopPrice
+    stopPrice   = close - stopDist
+    activeStop  := stopPrice
     tradedToday := true
-    strategy.entry("LG Long", strategy.long, comment = "OSE PosGamma 13:00")
+    strategy.entry("LG Long", strategy.long, comment = "Shield Battery 13:00")
     strategy.exit("LG Stop", from_entry = "LG Long", stop = stopPrice)
-    alert("OpenSourceEdge Ep.1 SIGNAL LONG: " + syminfo.ticker + " at " + str.tostring(close, format.mintick) +
-          " | Hard Stop: " + str.tostring(stopPrice, format.mintick) + " | Flat 15:55 ET", alert.freq_once_per_bar_close)
+    alert("OpenSourceEdge Shield Battery LONG: " + syminfo.ticker + " at " + str.tostring(close, format.mintick) + " | Hard Stop: " + str.tostring(stopPrice, format.mintick) + " | Flat 15:55 ET", alert.freq_once_per_bar_close)
 
 if strategy.position_size > 0 and isExitBar
     strategy.close("LG Long", comment = "Flat 15:55 ET")
     activeStop := na
-    alert("OpenSourceEdge Ep.1 FLAT 15:55 ET: Close " + syminfo.ticker + " long position.", alert.freq_once_per_bar_close)
+    alert("OpenSourceEdge Shield Battery FLAT 15:55 ET: Close " + syminfo.ticker + " long position.", alert.freq_once_per_bar_close)
 
 if strategy.position_size == 0 and not longSignal
     activeStop := na
@@ -150,14 +128,13 @@ if strategy.position_size == 0 and not longSignal
 // --- Clean Dark-Mode Visuals ---
 plot(rthVwap, "RTH VWAP", color = color.new(#2DD4BF, 20), linewidth = 2, style = plot.style_linebr)
 plot(activeStop, "Hard Stop (2x ATR15)", color = color.new(#F87171, 15), linewidth = 2, style = plot.style_linebr)
-plotshape(longSignal, title = "13:00 Pos-Gamma Signal", style = shape.triangleup, location = location.belowbar,
-          color = #2DD4BF, size = size.small, text = "LG", textcolor = #F3F5F8)
+plotshape(longSignal, title = "Shield Battery 13:00 Signal", style = shape.triangleup, location = location.belowbar, color = #2DD4BF, size = size.small, text = "SB", textcolor = #F3F5F8)
 
 // --- Minimal Status Panel ---
+var table tbl = table.new(position.top_right, 2, 5, bgcolor = color.new(#0B0E14, 10), border_color = #1E293B, border_width = 1)
 if showTable and barstate.islast
-    var table tbl = table.new(position.top_right, 2, 5, bgcolor = color.new(#0B0E14, 10), border_color = #1E293B, border_width = 1)
     table.cell(tbl, 0, 0, "OpenSourceEdge", text_color = #F3F5F8, text_size = size.small, text_halign = text.align_left)
-    table.cell(tbl, 1, 0, "Ep. 1 LG Drift", text_color = #2DD4BF, text_size = size.small, text_halign = text.align_right)
+    table.cell(tbl, 1, 0, "Shield Battery", text_color = #2DD4BF, text_size = size.small, text_halign = text.align_right)
     table.cell(tbl, 0, 1, "Gamma Regime", text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
     table.cell(tbl, 1, 1, isPosGamma ? "POSITIVE" : "NEGATIVE", text_color = isPosGamma ? #2DD4BF : #F87171, text_size = size.tiny, text_halign = text.align_right)
     table.cell(tbl, 0, 2, "VIX / VIX3M", text_color = #94A3B8, text_size = size.tiny, text_halign = text.align_left)
