@@ -3,279 +3,149 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>OpenSourceEdge | Free Futures Code &amp; Options Flow Research</title>
+  <title>OpenSourceEdge</title>
+  <meta name="description" content="Free, tick-tested futures strategies for NinjaTrader 8 and TradingView." />
   <link rel="icon" href="assets/pfp.png" type="image/png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     :root {
-      --bg: #0B0E14;
-      --surface: #111621;
-      --surface-2: #0E131D;
-      --border: #1E293B;
-      --border-hover: #334155;
-      --text: #F3F5F8;
-      --muted: #94A3B8;
-      --dim: #64748B;
+      --bg: #0A0D12;
+      --surface: #10141B;
+      --line: #1C232E;
+      --line-2: #2A3340;
+      --text: #E8ECF1;
+      --muted: #8C97A6;
+      --dim: #5B6675;
       --teal: #2DD4BF;
       --red: #F87171;
+      --amber: #E3B341;
+      --violet: #B48CF2;
+      --sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
     }
-    html, body {
-      max-width: 100%;
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--sans);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
       overflow-x: hidden;
     }
-    body {
-      background-color: var(--bg);
-      background-image:
-        linear-gradient(to right, rgba(148, 163, 184, 0.035) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(148, 163, 184, 0.035) 1px, transparent 1px);
-      background-size: 64px 64px;
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Inter", "Segoe UI", sans-serif;
-      line-height: 1.55;
-      -webkit-font-smoothing: antialiased;
-    }
-    .mono { font-family: "SF Mono", "JetBrains Mono", Menlo, Monaco, Consolas, monospace; }
-    .wrap {
-      max-width: 1020px;
-      margin: 0 auto;
-      padding: 28px 20px 72px 20px;
-    }
-    nav {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 16px;
-      padding-bottom: 24px;
-      border-bottom: 1px solid var(--border);
-      margin-bottom: 42px;
-      flex-wrap: wrap;
-    }
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 19px;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      text-decoration: none;
-      color: var(--text);
-    }
-    .brand span.accent { color: var(--teal); }
-    .nav-links {
-      display: flex;
-      gap: 12px;
-      align-items: center;
-    }
-    .nav-btn {
-      text-decoration: none;
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 500;
-      padding: 7px 13px;
-      border-radius: 8px;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      transition: border-color 0.15s, color 0.15s;
-    }
-    .nav-btn:hover { border-color: var(--border-hover); color: var(--text); }
+    a { color: inherit; }
+    .mono { font-family: var(--mono); }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 0 20px; }
 
-    .hero {
-      margin-bottom: 44px;
-    }
-    .hero h1 {
-      font-size: clamp(30px, 5vw, 46px);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.1;
-      margin-bottom: 14px;
-    }
-    .hero p {
-      font-size: 18px;
-      color: var(--muted);
-      max-width: 680px;
-      margin-bottom: 22px;
-    }
-    .stats {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-    .stat-pill {
-      font-size: 13px;
-      color: #CBD5E1;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 999px;
-      padding: 7px 14px;
-    }
-    .stat-pill strong { color: var(--teal); font-weight: 600; }
+    /* Nav */
+    nav { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+    .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 16px; letter-spacing: -0.01em; text-decoration: none; }
+    .brand b { color: var(--teal); font-weight: 600; }
+    .links { display: flex; gap: 22px; font-size: 14px; }
+    .links a { color: var(--muted); text-decoration: none; transition: color .15s; }
+    .links a:hover { color: var(--text); }
 
-    .section-label {
-      font-size: 12px;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--teal);
-      font-weight: 600;
-      margin-bottom: 10px;
-    }
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 28px;
-      margin-bottom: 28px;
-      min-width: 0;
-    }
-    .card h2 {
-      font-size: 26px;
-      letter-spacing: -0.02em;
-      margin-bottom: 6px;
-    }
-    .card .lead {
-      color: var(--muted);
-      font-size: 16px;
-      margin-bottom: 22px;
-    }
-    .img-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 16px;
-      margin-bottom: 24px;
-    }
-    .img-grid img {
-      width: 100%;
-      height: auto;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-      display: block;
-    }
-    .rules-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
-      gap: 12px;
-      margin-bottom: 24px;
-    }
-    .rule-item {
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 14px;
-    }
-    .rule-step {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--dim);
-      margin-bottom: 5px;
-    }
-    .rule-text {
-      font-size: 14px;
-      color: var(--text);
-      font-weight: 500;
-    }
+    /* Hero */
+    .hero { padding: 88px 0 72px; }
+    .kicker { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--teal); margin-bottom: 20px; }
+    h1 { font-size: clamp(34px, 6vw, 56px); line-height: 1.05; letter-spacing: -0.035em; font-weight: 700; max-width: 14ch; }
+    .sub { margin-top: 20px; font-size: 17px; color: var(--muted); max-width: 52ch; }
 
-    .btn-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-    button.copy-btn {
-      appearance: none;
-      cursor: pointer;
-      border-radius: 10px;
-      padding: 12px 18px;
-      font-size: 14px;
-      font-weight: 600;
-      border: 1px solid var(--border);
-      background: var(--surface-2);
-      color: var(--text);
-      transition: background 0.15s, border-color 0.15s, transform 0.08s;
-    }
-    button.copy-btn.primary {
-      background: var(--teal);
-      color: #06211E;
-      border-color: var(--teal);
-    }
-    button.copy-btn:hover { border-color: var(--teal); }
-    button.copy-btn.primary:hover { filter: brightness(1.06); }
-    button.copy-btn:active { transform: scale(0.99); }
+    /* Resource bar (top-right HUD nod) */
+    .hud { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 8px 28px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+    .hud span { display: inline-flex; align-items: center; gap: 8px; }
+    .hud i { width: 7px; height: 7px; display: inline-block; transform: rotate(45deg); background: var(--teal); }
+    .hud i.g { background: #4ADE80; }
+    .hud i.s { background: var(--line-2); }
+    .hud strong { color: var(--text); font-weight: 500; }
 
-    details {
-      margin-top: 12px;
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      overflow: hidden;
-    }
-    summary {
-      padding: 12px 16px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 600;
-      color: #CBD5E1;
-      user-select: none;
-    }
-    pre {
-      padding: 16px;
-      border-top: 1px solid var(--border);
-      overflow-x: auto;
-      font-size: 12.5px;
-      line-height: 1.5;
-      color: #CBD5E1;
-      max-height: 360px;
-    }
+    /* Sections */
+    section { padding: 56px 0; border-top: 1px solid var(--line); }
+    .label { font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--dim); margin-bottom: 10px; }
+    h2 { font-size: 26px; letter-spacing: -0.025em; font-weight: 600; line-height: 1.2; }
+    .lead { color: var(--muted); margin-top: 8px; max-width: 60ch; }
 
-    .grave-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 14px;
-    }
-    .grave-item {
-      background: var(--surface-2);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 16px;
-    }
-    .grave-item h3 {
-      font-size: 15px;
-      margin-bottom: 6px;
-      color: var(--text);
-    }
-    .grave-item p {
-      font-size: 13.5px;
-      color: var(--muted);
-    }
-    .tag-dead {
-      display: inline-block;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--red);
-      margin-bottom: 6px;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
+    /* Build order list */
+    .orders { margin-top: 28px; list-style: none; border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+    .orders li { display: grid; grid-template-columns: 44px 1fr auto; align-items: center; gap: 16px; padding: 14px 18px; border-top: 1px solid var(--line); }
+    .orders li:first-child { border-top: 0; }
+    .orders .n { font-family: var(--mono); font-size: 13px; color: var(--dim); }
+    .orders .name { font-weight: 600; }
+    .orders .what { color: var(--muted); font-size: 14px; }
+    .orders .race { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--dim); margin-left: 8px; }
+    .orders .race::before { content: ""; display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 6px; vertical-align: 1px; background: currentColor; }
+    .race.p { color: var(--teal); } .race.t { color: var(--amber); } .race.z { color: var(--violet); }
+    .status { font-family: var(--mono); font-size: 12px; color: var(--dim); white-space: nowrap; }
+    .orders li.live { background: var(--surface); }
+    .orders li.live .status { color: var(--teal); }
+    .orders li.live a { text-decoration: none; }
+    .orders li.live a:hover .name { color: var(--teal); }
+    .orders li:not(.live) .name { color: #B4BDC9; }
 
-    footer {
-      margin-top: 40px;
-      padding-top: 20px;
-      border-top: 1px solid var(--border);
-      font-size: 13px;
-      color: var(--dim);
-      display: flex;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+    /* Feature */
+    .figs { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 28px; }
+    figure { position: relative; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 8px; border: 1px solid var(--line); }
+    figure::before, figure::after { content: ""; position: absolute; width: 12px; height: 12px; border-color: var(--line-2); border-style: solid; pointer-events: none; }
+    figure::before { top: -6px; left: -6px; border-width: 1px 0 0 1px; }
+    figure::after { bottom: -6px; right: -6px; border-width: 0 1px 1px 0; }
+
+    .rules { margin-top: 28px; display: grid; grid-template-columns: repeat(4, 1fr); border: 1px solid var(--line); border-radius: 12px; }
+    .rules div { padding: 16px 18px; border-left: 1px solid var(--line); }
+    .rules div:first-child { border-left: 0; }
+    .rules dt { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--dim); margin-bottom: 6px; }
+    .rules dd { font-size: 14px; line-height: 1.45; }
+
+    .stats { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 6px 24px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+    .stats strong { color: var(--text); font-weight: 500; }
+    .stats .up { color: var(--teal); }
+
+    .actions { margin-top: 28px; display: flex; flex-wrap: wrap; gap: 10px; }
+    button.copy { appearance: none; cursor: pointer; font: 500 14px var(--sans); color: var(--text); background: transparent; border: 1px solid var(--line-2); border-radius: 8px; padding: 10px 16px; transition: border-color .15s, background .15s; }
+    button.copy:hover { border-color: var(--muted); }
+    button.copy.primary { background: var(--teal); border-color: var(--teal); color: #04201C; }
+    button.copy.primary:hover { filter: brightness(1.08); }
+    button.copy.done { border-color: var(--teal); color: var(--teal); }
+    button.copy.primary.done { color: #04201C; }
+
+    details { margin-top: 10px; border: 1px solid var(--line); border-radius: 8px; }
+    details:first-of-type { margin-top: 24px; }
+    summary { cursor: pointer; list-style: none; padding: 12px 16px; font-size: 14px; color: var(--muted); display: flex; justify-content: space-between; }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; font-family: var(--mono); color: var(--dim); }
+    details[open] summary::after { content: "-"; }
+    summary:hover { color: var(--text); }
+    pre { border-top: 1px solid var(--line); padding: 16px; max-height: 380px; overflow: auto; font-family: var(--mono); font-size: 12px; line-height: 1.55; color: #B4BDC9; background: #0C1016; border-radius: 0 0 8px 8px; }
+
+    /* Graveyard */
+    .grave { margin-top: 24px; list-style: none; }
+    .grave li { display: grid; grid-template-columns: 170px 1fr; gap: 20px; padding: 16px 0; border-top: 1px solid var(--line); }
+    .grave li:first-child { border-top: 0; }
+    .grave h3 { font-size: 15px; font-weight: 600; }
+    .grave .tag { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--red); margin-top: 2px; }
+    .grave p { color: var(--muted); font-size: 14px; }
+    .more { display: inline-block; margin-top: 18px; font-size: 14px; color: var(--muted); text-decoration: none; }
+    .more:hover { color: var(--text); }
+
+    footer { border-top: 1px solid var(--line); padding: 28px 0 48px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px 24px; font-size: 13px; color: var(--dim); }
+    footer a { text-decoration: none; }
+    footer a:hover { color: var(--text); }
 
     @media (max-width: 720px) {
-      .wrap { padding: 20px 16px 56px 16px; }
-      nav { gap: 12px; margin-bottom: 28px; }
-      .img-grid { grid-template-columns: 1fr; }
-      .rules-grid { grid-template-columns: 1fr; }
-      .grave-grid { grid-template-columns: 1fr; }
-      .card { padding: 18px; }
-      button.copy-btn { width: 100%; }
+      .wrap { padding: 0 16px; }
+      .hero { padding: 48px 0 48px; }
+      .links { gap: 16px; }
+      .figs { grid-template-columns: 1fr; }
+      .rules { grid-template-columns: 1fr 1fr; }
+      .rules div:nth-child(3) { border-left: 0; }
+      .rules div:nth-child(n+3) { border-top: 1px solid var(--line); }
+      .orders li { grid-template-columns: 30px 1fr; padding: 14px; }
+      .orders .status { grid-column: 2; }
+      .grave li { grid-template-columns: 1fr; gap: 4px; }
+      button.copy { flex: 1 1 100%; }
     }
   </style>
 </head>
@@ -283,67 +153,83 @@
   <div class="wrap">
     <nav>
       <a class="brand" href="#">
-        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
-          <path d="M7 7L2.5 12L7 17" stroke="#F3F5F8" stroke-width="2.2" stroke-linecap="square"/>
-          <path d="M17 7L21.5 12L17 17" stroke="#F3F5F8" stroke-width="2.2" stroke-linecap="square"/>
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M7 7L2.5 12L7 17" stroke="#E8ECF1" stroke-width="2.2" stroke-linecap="square"/>
+          <path d="M17 7L21.5 12L17 17" stroke="#E8ECF1" stroke-width="2.2" stroke-linecap="square"/>
           <path d="M9.5 16.5V13.5H12V10.5H14.5V7.5" stroke="#2DD4BF" stroke-width="2.2" stroke-linecap="square"/>
         </svg>
-        <span>OpenSource<span class="accent">Edge</span></span>
+        <span>OpenSource<b>Edge</b></span>
       </a>
-      <div class="nav-links">
-        <a class="nav-btn" href="https://x.com/OpenSourceEdge" target="_blank" rel="noopener">X / Twitter</a>
-        <a class="nav-btn" href="https://github.com/Open-Source-Edge/everything" target="_blank" rel="noopener">GitHub Repo</a>
+      <div class="links">
+        <a href="#orders">Build orders</a>
+        <a href="https://x.com/OpenSourceEdge" target="_blank" rel="noopener">X</a>
+        <a href="https://github.com/Open-Source-Edge/everything" target="_blank" rel="noopener">GitHub</a>
       </div>
     </nav>
 
-    <section class="hero">
-      <h1>Stop microing 1-minute candles with zero macro.</h1>
-      <p>Verified intraday futures Build Orders backed by 1B+ real ticks and 32M options rows. Strictly causal. No map hacks. Free forever.</p>
-      <div class="stats mono">
-        <div class="stat-pill"><strong>1B+</strong> Real Ticks</div>
-        <div class="stat-pill"><strong>32M</strong> Options Rows</div>
-        <div class="stat-pill"><strong>8 Years</strong> Data (2019-2026)</div>
-        <div class="stat-pill"><strong>NT8 + TradingView</strong></div>
+    <header class="hero">
+      <div class="kicker">Open-source build orders</div>
+      <h1>Stop microing 1&#8209;minute candles with zero macro.</h1>
+      <p class="sub">Futures strategies tested on real ticks, explained in plain English, and free to copy into NinjaTrader 8 or TradingView.</p>
+      <div class="hud">
+        <span><i></i><strong>1B+</strong> real ticks</span>
+        <span><i class="g"></i><strong>32M</strong> options rows</span>
+        <span><i class="s"></i><strong>2019 to 2026</strong></span>
+        <span><i class="s"></i><strong>$0</strong></span>
       </div>
+    </header>
+
+    <section id="orders">
+      <div class="label">Build orders</div>
+      <h2>One strategy per episode.</h2>
+      <p class="lead">Each ships with code for both platforms and the test that kept it alive.</p>
+      <ol class="orders">
+        <li class="live">
+          <span class="n">01</span>
+          <a href="#shield-battery"><span class="name">Shield Battery</span><span class="race p">Protoss</span><div class="what">Long-gamma afternoon drift on MNQ</div></a>
+          <span class="status">Released</span>
+        </li>
+        <li><span class="n">02</span><div><span class="name">Stimpack</span><span class="race t">Terran</span><div class="what">First five minutes, one-way open</div></div><span class="status">Queued</span></li>
+        <li><span class="n">03</span><div><span class="name">Siege Tank</span><span class="race t">Terran</span><div class="what">Noise band breakout</div></div><span class="status">Queued</span></li>
+        <li><span class="n">04</span><div><span class="name">Blink Stalker</span><span class="race p">Protoss</span><div class="what">Fast morning MNQ and YM scalp</div></div><span class="status">Queued</span></li>
+        <li><span class="n">05</span><div><span class="name">Yamato Cannon</span><span class="race t">Terran</span><div class="what">Treasury post-auction, 1:10 PM</div></div><span class="status">Queued</span></li>
+        <li><span class="n">06</span><div><span class="name">MULE Drop</span><span class="race t">Terran</span><div class="what">Turn-of-month flow</div></div><span class="status">Queued</span></li>
+        <li><span class="n">07</span><div><span class="name">Psionic Storm</span><span class="race p">Protoss</span><div class="what">Short-gamma last hour</div></div><span class="status">Queued</span></li>
+        <li><span class="n">08</span><div><span class="name">Widow Mine</span><span class="race t">Terran</span><div class="what">QQQ call-euphoria short</div></div><span class="status">Queued</span></li>
+      </ol>
     </section>
 
-    <section class="card">
-      <div class="section-label mono">Build Order 01 · Protoss Options Plumbing</div>
-      <h2>Shield Battery (Long-Gamma 1:00 PM Drift)</h2>
-      <p class="lead">Same exact 13:00 ET VWAP entry split solely by where ES opens relative to the pre-market SPX 14-DTE Gamma Flip.</p>
+    <section id="shield-battery">
+      <div class="label">Build order 01 · Protoss</div>
+      <h2>Shield Battery</h2>
+      <p class="lead">One 1:00 PM Nasdaq entry, taken only when dealers are long gamma.</p>
 
-      <div class="img-grid">
-        <img src="assets/ep01-concept.png" alt="Dealer Gamma in 5 Seconds" />
-        <img src="assets/ep01-proof.png" alt="8-Year Backtest Proof Split by Dealer Gamma" />
+      <div class="figs">
+        <figure><img src="assets/ep01-concept.png" alt="Dealer gamma explained" /></figure>
+        <figure><img src="assets/ep01-proof.png" alt="Eight-year result split by dealer gamma" /></figure>
       </div>
 
-      <div class="rules-grid">
-        <div class="rule-item">
-          <div class="rule-step mono">01 · Regime</div>
-          <div class="rule-text">ES opens above SPX 14-DTE Gamma Flip</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-step mono">02 · Calendar</div>
-          <div class="rule-text">Skip the 8 FOMC decision days a year</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-step mono">03 · Entry</div>
-          <div class="rule-text">Buy 1 MNQ if 13:00 ET close &gt; RTH VWAP</div>
-        </div>
-        <div class="rule-item">
-          <div class="rule-step mono">04 · Exit</div>
-          <div class="rule-text">2.0x ATR(15m) hard stop, flat 15:55 ET</div>
-        </div>
+      <dl class="rules">
+        <div><dt>01 Regime</dt><dd>ES opens above the SPX 14-day gamma flip</dd></div>
+        <div><dt>02 Calendar</dt><dd>Skip FOMC decision days</dd></div>
+        <div><dt>03 Entry</dt><dd>Buy 1 MNQ if the 1:00 PM close is above VWAP</dd></div>
+        <div><dt>04 Exit</dt><dd>2x 15-minute ATR stop, flat at 3:55 PM</dd></div>
+      </dl>
+
+      <div class="stats">
+        <span><strong class="up">+$9,711</strong> over 8 years</span>
+        <span><strong>-$1,096</strong> max drawdown</span>
+        <span><strong>7</strong> green years in a row</span>
       </div>
 
-      <div class="btn-row">
-        <button class="copy-btn primary" onclick="copyBlock('pine-src', this)">Copy TradingView Script (v6)</button>
-        <button class="copy-btn" onclick="copyBlock('cs-src', this)">Copy NinjaTrader 8 Bot (C#)</button>
-        <button class="copy-btn" onclick="copyBlock('prompt-src', this)">Copy Gemini 4 Neon Prompt</button>
+      <div class="actions">
+        <button class="copy primary" data-src="pine-src">Copy TradingView script</button>
+        <button class="copy" data-src="cs-src">Copy NinjaTrader 8 strategy</button>
+        <button class="copy" data-src="prompt-src">Copy AI prompt</button>
       </div>
 
       <details>
-        <summary>View TradingView PineScript v6 Code</summary>
+        <summary>TradingView · Pine Script v6</summary>
         <pre class="mono" id="pine-src">//@version=6
 // ============================================================================
 // OpenSourceEdge - Build Order #01: Shield Battery (Long-Gamma Drift, TV v6)
@@ -514,9 +400,8 @@ if showTable and barstate.islast
     statusTxt = isFomcDay ? &quot;SKIP (FOMC)&quot; : (vix9dBlocked ? &quot;SKIP (VOL)&quot; : (regimeAllowed ? &quot;ARMED&quot; : &quot;OFF&quot;))
     table.cell(tbl, 1, 4, statusTxt, text_color = regimeAllowed ? #2DD4BF : #94A3B8, text_size = size.tiny, text_halign = text.align_right)</pre>
       </details>
-
       <details>
-        <summary>View NinjaTrader 8 C# Code</summary>
+        <summary>NinjaTrader 8 · C#</summary>
         <pre class="mono" id="cs-src">// ============================================================================
 // OpenSourceEdge - Build Order #01: Shield Battery (Long-Gamma Drift, NT8)
 // ============================================================================
@@ -1499,9 +1384,8 @@ namespace NinjaTrader.NinjaScript.Strategies.OpenSourceEdgeLgCore
 }
 // CORE-END</pre>
       </details>
-
       <details>
-        <summary>View Gemini 4 Neon Stress-Test &amp; Port Prompt</summary>
+        <summary>AI research prompt</summary>
         <pre class="mono" id="prompt-src">Here&#x27;s the Long-Gamma Afternoon Drift strategy (NinjaScript / PineScript).
 
 Do one of the following based on what I ask next:
@@ -1517,59 +1401,45 @@ Don&#x27;t optimize parameters to make the equity curve prettier. Tell me bluntl
       </details>
     </section>
 
-    <section class="card">
-      <div class="section-label mono">Strategy Graveyard · Fallen Units</div>
-      <h2>6-Pool Cheese That Died Under Real Ticks</h2>
-      <p class="lead">Popular retail myths tested across 8 years, real slippage, and blind out-of-sample data.</p>
-
-      <div class="grave-grid">
-        <div class="grave-item">
-          <div class="tag-dead mono">Died Gross</div>
-          <h3>ICT / SMC Setups</h3>
-          <p>iFVG, SMT divergence, session sweeps, and lunch fades lost money before commissions. Pure 6-pool cheese.</p>
-        </div>
-        <div class="grave-item">
-          <div class="tag-dead mono">1B+ Real Ticks</div>
-          <h3>Order Flow &amp; CVD</h3>
-          <p>CVD divergence, delta thrusts, and absorption lost to plain price out-of-sample.</p>
-        </div>
-        <div class="grave-item">
-          <div class="tag-dead mono">2023 Regime Break</div>
-          <h3>Power-Hour &amp; $TICK</h3>
-          <p>Both printed from 2019 to 2022, then inverted completely after daily 0DTE options arrived.</p>
-        </div>
-        <div class="grave-item">
-          <div class="tag-dead mono">Microstructure Math</div>
-          <h3>20.2% Friction on ZN</h3>
-          <p>1-tick slippage + commissions eats 20.2% of a normal 10Y Bond stop vs 1.26% on MNQ.</p>
-        </div>
-      </div>
+    <section id="graveyard">
+      <div class="label">Fallen units</div>
+      <h2>What died under real ticks.</h2>
+      <p class="lead">Popular setups tested across eight years, real slippage and blind out-of-sample data.</p>
+      <ul class="grave">
+        <li><div><h3>ICT / SMC</h3><div class="tag">Lost before fees</div></div><p>iFVG, SMT divergence, session sweeps and lunch fades lost money before commissions.</p></li>
+        <li><div><h3>Order flow and CVD</h3><div class="tag">1B+ ticks</div></div><p>CVD divergence, delta thrusts and absorption lost to plain price out of sample.</p></li>
+        <li><div><h3>Power hour and $TICK</h3><div class="tag">Broke in 2023</div></div><p>Both worked from 2019 to 2022, then flipped once daily 0DTE options arrived.</p></li>
+        <li><div><h3>Friction on ZN</h3><div class="tag">20.2% of the stop</div></div><p>One tick of slippage plus fees eats 20.2% of a normal 10-year note stop, versus 1.26% on MNQ.</p></li>
+      </ul>
+      <a class="more" href="https://github.com/Open-Source-Edge/everything/blob/main/GRAVEYARD.md" target="_blank" rel="noopener">Full graveyard on GitHub →</a>
     </section>
 
     <footer>
-      <div>MIT License · Educational research and open-source code only. Not financial advice.</div>
-      <div class="mono">@OpenSourceEdge</div>
+      <span>MIT License. Educational research, not financial advice.</span>
+      <a class="mono" href="https://x.com/OpenSourceEdge" target="_blank" rel="noopener">@OpenSourceEdge</a>
     </footer>
   </div>
 
   <script>
-    function copyBlock(id, btn) {
-      const text = document.getElementById(id).textContent;
-      const original = btn.textContent;
-      navigator.clipboard.writeText(text).then(() => {
-        btn.textContent = "Copied to clipboard";
-        setTimeout(() => { btn.textContent = original; }, 1800);
-      }).catch(() => {
-        const ta = document.createElement("textarea");
-        ta.value = text;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        document.body.removeChild(ta);
-        btn.textContent = "Copied to clipboard";
-        setTimeout(() => { btn.textContent = original; }, 1800);
+    function copyText(text) {
+      if (navigator.clipboard && window.isSecureContext) return navigator.clipboard.writeText(text);
+      return new Promise(function (resolve) {
+        var ta = document.createElement("textarea");
+        ta.value = text; ta.style.position = "fixed"; ta.style.opacity = "0";
+        document.body.appendChild(ta); ta.select();
+        try { document.execCommand("copy"); } catch (e) {}
+        document.body.removeChild(ta); resolve();
       });
     }
+    document.querySelectorAll("button.copy").forEach(function (btn) {
+      var label = btn.textContent;
+      btn.addEventListener("click", function () {
+        copyText(document.getElementById(btn.dataset.src).textContent).then(function () {
+          btn.textContent = "Copied"; btn.classList.add("done");
+          setTimeout(function () { btn.textContent = label; btn.classList.remove("done"); }, 1600);
+        });
+      });
+    });
   </script>
 </body>
 </html>
