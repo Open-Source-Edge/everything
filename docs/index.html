@@ -1354,13 +1354,13 @@
 // ============================================================================
 // Author:  @OpenSourceEdge
 // License: MIT (Free to use, modify, fork, and backtest)
-// Chart:   MNQ1! (or NQ1!) on the 1-Minute timeframe
+// Chart:   MNQ1! (or NQ1!) on the 1-Minute or 5-Minute timeframe
 // Scouted on 1B+ real ticks &amp; 32M options rows. Strictly causal. No map hacks.
 //
 // QUICK START (BEGINNERS):
-// 1. Open MNQ1! on a 1-Minute chart and add this script.
+// 1. Open MNQ1! on a 1m (live) or 5m (longer free backtest) chart.
 // 2. Default mode (&quot;Auto Free Proxy&quot;) works immediately with zero setup.
-// 3. To get phone pings at 13:00 ET (entry + exact stop) and 15:55 ET (flat):
+// 3. Phone alerts at 13:00 ET (entry + exact stop) and 15:55 ET (flat):
 //    Alerts clock -&gt; Condition: OSE Shield Battery -&gt; Order fills and alert()
 //    function calls -&gt; Create.
 // 4. Optional Pro Mode (&quot;Live Manual Gamma Flip&quot;): toggle Positive Gamma Today
@@ -1369,26 +1369,27 @@
 
 strategy(&quot;OpenSourceEdge: Shield Battery (Long-Gamma 13:00)&quot;, shorttitle = &quot;OSE Shield Battery&quot;, overlay = true, initial_capital = 50000, default_qty_type = strategy.fixed, default_qty_value = 1, margin_long = 0, margin_short = 0, commission_type = strategy.commission.cash_per_contract, commission_value = 0.62, slippage = 1, calc_on_every_tick = false, process_orders_on_close = false)
 
-// --- Inputs ---
+// --- Inputs (display.none keeps the chart legend clean) ---
 grpReg = &quot;1. Dealer Gamma Regime&quot;
-regimeMode     = input.string(&quot;Auto Free Proxy (VIX/VIX3M)&quot;, &quot;Regime Mode&quot;, options = [&quot;Auto Free Proxy (VIX/VIX3M)&quot;, &quot;Live Manual Gamma Flip&quot;], group = grpReg)
-vixRatioMax    = input.float(0.98, &quot;Proxy: Max Prior-Day VIX/VIX3M&quot;, step = 0.01, minval = 0.70, maxval = 1.20, group = grpReg)
-useVix9dVeto   = input.bool(true, &quot;Skip VIX9D/VIX &gt;= 1.05 (Short-Term Vol Stress)&quot;, group = grpReg)
-vix9dMax       = input.float(1.05, &quot;Max Prior-Day VIX9D/VIX&quot;, step = 0.01, minval = 0.80, maxval = 1.50, group = grpReg)
-manualPosGamma = input.bool(true, &quot;Live Mode: Positive Gamma Today (ES Open &gt; SPX Flip)&quot;, group = grpReg)
+regimeMode     = input.string(&quot;Auto Free Proxy (VIX/VIX3M)&quot;, &quot;Regime Mode&quot;, options = [&quot;Auto Free Proxy (VIX/VIX3M)&quot;, &quot;Live Manual Gamma Flip&quot;], group = grpReg, display = display.none)
+vixRatioMax    = input.float(0.98, &quot;Proxy: Max Prior-Day VIX/VIX3M&quot;, step = 0.01, minval = 0.70, maxval = 1.20, group = grpReg, display = display.none)
+useVix9dVeto   = input.bool(true, &quot;Skip VIX9D/VIX &gt;= 1.05 (Short-Term Vol Stress)&quot;, group = grpReg, display = display.none)
+vix9dMax       = input.float(1.05, &quot;Max Prior-Day VIX9D/VIX&quot;, step = 0.01, minval = 0.80, maxval = 1.50, group = grpReg, display = display.none)
+manualPosGamma = input.bool(true, &quot;Live Mode: Positive Gamma Today (ES Open &gt; SPX Flip)&quot;, group = grpReg, display = display.none)
 
 grpSig = &quot;2. Signal &amp; Risk&quot;
-checkHourEt    = input.int(13, &quot;Check Hour (ET)&quot;, minval = 12, maxval = 15, group = grpSig)
-checkMinEt     = input.int(0,  &quot;Check Minute (ET)&quot;, minval = 0, maxval = 59, group = grpSig)
-exitHourEt     = input.int(15, &quot;Flat Hour (ET)&quot;, minval = 13, maxval = 15, group = grpSig)
-exitMinEt      = input.int(55, &quot;Flat Minute (ET)&quot;, minval = 0, maxval = 59, group = grpSig)
-stopAtrMult    = input.float(2.0, &quot;Stop Loss (ATR 15m Multiple)&quot;, step = 0.25, minval = 0.5, maxval = 5.0, group = grpSig)
-minStopTicks   = input.int(16, &quot;Min Stop (Ticks)&quot;, minval = 4, maxval = 200, group = grpSig)
-maxStopPoints  = input.float(200.0, &quot;Max Stop Cap (Points, 0 = Off)&quot;, minval = 0.0, group = grpSig)
-skipFomc       = input.bool(true, &quot;Skip Scheduled FOMC Days (2024-2026)&quot;, group = grpSig)
+checkHourEt    = input.int(13, &quot;Check Hour (ET)&quot;, minval = 12, maxval = 15, group = grpSig, display = display.none)
+checkMinEt     = input.int(0,  &quot;Check Minute (ET)&quot;, minval = 0, maxval = 59, group = grpSig, display = display.none)
+exitHourEt     = input.int(15, &quot;Flat Hour (ET)&quot;, minval = 13, maxval = 15, group = grpSig, display = display.none)
+exitMinEt      = input.int(55, &quot;Flat Minute (ET)&quot;, minval = 0, maxval = 59, group = grpSig, display = display.none)
+stopAtrMult    = input.float(2.0, &quot;Stop Loss (ATR 15m Multiple)&quot;, step = 0.25, minval = 0.5, maxval = 5.0, group = grpSig, display = display.none)
+minStopTicks   = input.int(16, &quot;Min Stop (Ticks)&quot;, minval = 4, maxval = 200, group = grpSig, display = display.none)
+maxStopPoints  = input.float(200.0, &quot;Max Stop Cap (Points, 0 = Off)&quot;, minval = 0.0, group = grpSig, display = display.none)
+skipFomc       = input.bool(true, &quot;Skip Scheduled FOMC Days (2024-2026)&quot;, group = grpSig, display = display.none)
 
 grpUi = &quot;3. Display&quot;
-showTable      = input.bool(true, &quot;Show Plain-English Status Panel&quot;, group = grpUi)
+showTable      = input.bool(true, &quot;Show Plain-English Status Panel&quot;, group = grpUi, display = display.none)
+showZones      = input.bool(true, &quot;Show Entry &amp; Stop Risk Zone Box&quot;, group = grpUi, display = display.none)
 
 // --- Strictly Causal Prior-Day CBOE Term Structure (Zero Lookahead) ---
 vixPrev   = request.security(&quot;CBOE:VIX&quot;,   &quot;D&quot;, close[1], gaps = barmerge.gaps_off, lookahead = barmerge.lookahead_on)
@@ -1464,31 +1465,41 @@ if longSignal
     stopPrice   = close - stopDist
     activeStop  := stopPrice
     tradedToday := true
-    strategy.entry(&quot;LG Long&quot;, strategy.long, comment = &quot;Shield Battery 13:00&quot;)
-    strategy.exit(&quot;LG Stop&quot;, from_entry = &quot;LG Long&quot;, stop = stopPrice)
+    strategy.entry(&quot;LONG&quot;, strategy.long, comment = &quot;Shield Battery&quot;)
+    strategy.exit(&quot;STOP&quot;, from_entry = &quot;LONG&quot;, stop = stopPrice, comment = &quot;Stop&quot;)
     alert(&quot;OpenSourceEdge Shield Battery BUY 13:00: &quot; + syminfo.ticker + &quot; at &quot; + str.tostring(close, format.mintick) + &quot; | Hard Stop: &quot; + str.tostring(stopPrice, format.mintick) + &quot; (&quot; + str.tostring(stopDist, &quot;#.##&quot;) + &quot; pts) | Flat 15:55 ET&quot;, alert.freq_once_per_bar_close)
 
 if strategy.position_size &gt; 0 and isExitBar
-    strategy.close(&quot;LG Long&quot;, comment = &quot;Flat 15:55 ET&quot;)
-    activeStop := na
+    strategy.close(&quot;LONG&quot;, comment = &quot;Flat 15:55&quot;)
     alert(&quot;OpenSourceEdge Shield Battery FLAT 15:55 ET: Close &quot; + syminfo.ticker + &quot; long position.&quot;, alert.freq_once_per_bar_close)
 
-if strategy.position_size == 0 and not longSignal
+if strategy.position_size == 0 and not longSignal and strategy.position_size[1] == 0
     activeStop := na
 
-// --- Clean Visuals (Readable on Both Light &amp; Dark Themes) ---
-plot(rthVwap, &quot;RTH VWAP (Must Close Above at 13:00 ET)&quot;, color = color.new(#0D9488, 10), linewidth = 2, style = plot.style_linebr)
-plot(activeStop, &quot;Hard Stop (2x ATR15)&quot;, color = color.new(#EF4444, 0), linewidth = 2, style = plot.style_linebr)
-plotshape(longSignal, title = &quot;Shield Battery Buy Signal&quot;, style = shape.labelup, location = location.belowbar, color = #0D9488, size = size.normal, text = &quot;BUY 13:00&quot;, textcolor = color.white)
+// --- Clean Position-Box Visuals (Zero Overlapping Labels, Light &amp; Dark Ready) ---
+inLong      = strategy.position_size &gt; 0
+justClosed  = strategy.position_size == 0 and strategy.position_size[1] &gt; 0
+showTrade   = showZones and (inLong or justClosed)
+entryPlot   = showTrade ? (inLong ? strategy.position_avg_price : strategy.position_avg_price[1]) : na
+stopPlot    = showTrade ? activeStop : na
+profitPlot  = (showTrade and not na(entryPlot) and close &gt; entryPlot) ? close : entryPlot
+
+plot(rthVwap, &quot;RTH VWAP&quot;, color = color.new(#0D9488, 15), linewidth = 2, style = plot.style_linebr)
+pEntry  = plot(entryPlot, &quot;Entry Price&quot;, color = color.new(#0D9488, 0), linewidth = 2, style = plot.style_linebr)
+pStop   = plot(stopPlot, &quot;Hard Stop (2x ATR15)&quot;, color = color.new(#EF4444, 0), linewidth = 2, style = plot.style_linebr)
+pProfit = plot(profitPlot, &quot;Open Profit Edge&quot;, color = color.new(#10B981, 100), linewidth = 1, style = plot.style_linebr, display = display.pane)
+
+fill(pEntry, pStop, color = color.new(#EF4444, 88), title = &quot;Risk Zone&quot;)
+fill(pEntry, pProfit, color = color.new(#10B981, 86), title = &quot;Profit Zone&quot;)
 
 // --- Dummy-Proof Plain-English Status Panel (Readable Size) ---
 var table tbl = table.new(position.top_right, 2, 6, bgcolor = color.new(#0B0E14, 6), border_color = #334155, border_width = 1, frame_color = #334155, frame_width = 1)
 if showTable and barstate.islast
-    actionTxt = not isValidTf ? &quot;USE 1M OR 5M CHART&quot; : (strategy.position_size &gt; 0 ? &quot;IN LONG (FLAT 15:55)&quot; : (tradedToday ? &quot;DONE FOR TODAY&quot; : (isFomcDay ? &quot;SKIP TODAY (FOMC)&quot; : (vix9dBlocked ? &quot;SKIP (VOL STRESS)&quot; : (not isPosGamma ? &quot;SKIP (NEG GAMMA)&quot; : (isRth and etTotalM &gt; checkTargetMin ? &quot;NO SIGNAL TODAY&quot; : &quot;WATCH 13:00 ET&quot;))))))
-    actionCol = not isValidTf ? #F87171 : (strategy.position_size &gt; 0 or actionTxt == &quot;WATCH 13:00 ET&quot; ? #2DD4BF : #94A3B8)
+    actionTxt = not isValidTf ? &quot;USE 1M OR 5M CHART&quot; : (inLong ? &quot;IN LONG (FLAT 15:55)&quot; : (tradedToday ? &quot;DONE FOR TODAY&quot; : (isFomcDay ? &quot;SKIP TODAY (FOMC)&quot; : (vix9dBlocked ? &quot;SKIP (VOL STRESS)&quot; : (not isPosGamma ? &quot;SKIP (NEG GAMMA)&quot; : (isRth and etTotalM &gt; checkTargetMin ? &quot;NO SIGNAL TODAY&quot; : &quot;WATCH 13:00 ET&quot;))))))
+    actionCol = not isValidTf ? #F87171 : (inLong or actionTxt == &quot;WATCH 13:00 ET&quot; ? #2DD4BF : #94A3B8)
     modeTxt   = isManualMode ? &quot;MANUAL FLIP&quot; : (na(vixRatio) ? &quot;N/A&quot; : str.tostring(vixRatio, &quot;#.##&quot;) + &quot; (VIX/3M)&quot;)
-    stopTxt   = not na(activeStop) ? str.tostring(activeStop, format.mintick) : (na(stopDist) ? &quot;N/A&quot; : str.tostring(stopDist, &quot;#.##&quot;) + &quot; pts&quot;)
-    stopLbl   = not na(activeStop) ? &quot;Active Hard Stop&quot; : &quot;Est. Stop (2x ATR)&quot;
+    stopTxt   = (inLong and not na(activeStop)) ? str.tostring(activeStop, format.mintick) : (na(stopDist) ? &quot;N/A&quot; : str.tostring(stopDist, &quot;#.##&quot;) + &quot; pts&quot;)
+    stopLbl   = (inLong and not na(activeStop)) ? &quot;Active Hard Stop&quot; : &quot;Est. Stop (2x ATR)&quot;
 
     table.cell(tbl, 0, 0, &quot;OpenSourceEdge&quot;, text_color = #F3F5F8, text_size = size.large, text_halign = text.align_left)
     table.cell(tbl, 1, 0, &quot;Shield Battery&quot;, text_color = #2DD4BF, text_size = size.large, text_halign = text.align_right)
@@ -1499,7 +1510,7 @@ if showTable and barstate.islast
     table.cell(tbl, 0, 3, &quot;Regime Input&quot;, text_color = #94A3B8, text_size = size.normal, text_halign = text.align_left)
     table.cell(tbl, 1, 3, modeTxt, text_color = #F3F5F8, text_size = size.normal, text_halign = text.align_right)
     table.cell(tbl, 0, 4, stopLbl, text_color = #94A3B8, text_size = size.normal, text_halign = text.align_left)
-    table.cell(tbl, 1, 4, stopTxt, text_color = not na(activeStop) ? #F87171 : #F3F5F8, text_size = size.normal, text_halign = text.align_right)
+    table.cell(tbl, 1, 4, stopTxt, text_color = (inLong and not na(activeStop)) ? #F87171 : #F3F5F8, text_size = size.normal, text_halign = text.align_right)
     table.cell(tbl, 0, 5, &quot;Rule&quot;, text_color = #94A3B8, text_size = size.normal, text_halign = text.align_left)
     table.cell(tbl, 1, 5, &quot;MNQ 1m/5m · &gt; VWAP&quot;, text_color = #CBD5E1, text_size = size.normal, text_halign = text.align_right)</pre>
             <div class="code-foot">
