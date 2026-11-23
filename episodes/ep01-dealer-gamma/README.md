@@ -52,6 +52,8 @@ Drop below the Gamma Flip and the shields are gone. Dealers flip to selling into
 - Real 1-Tick Replay (`1t` slip): **`+$2,190`**
 - Real Live Bid-Ask Spread (`1.42t` avg spread): **`+$2,144`** (`0.983` P&L correlation)
 
+**Full Backtest Bundle:** [`backtest/trades.csv`](backtest/trades.csv) (all 630 trades, 2019-2026) · [`backtest/metrics.json`](backtest/metrics.json) (splits, yearly P&L, equity curves).
+
 ---
 
 ## NinjaTrader 8 Daily Regime CSV Format
@@ -90,7 +92,7 @@ Define every trading term the first time you use it. Keep it short.
 ```text
 I'm new to TradingView. Below is a Pine Script strategy. Walk me through adding it to a chart one step at a time, and wait for me to say "done" before you give the next step:
 
-1. Open a 1-minute MNQ1! chart.
+1. Open a 1-minute or 5-minute MNQ1! chart.
 2. Paste the script into the Pine Editor and add it to the chart.
 3. Open the Strategy Tester and explain what each number means.
 

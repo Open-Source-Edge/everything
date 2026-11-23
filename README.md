@@ -70,7 +70,7 @@ Define every trading term the first time you use it. Keep it short.
 ```text
 I'm new to TradingView. Below is a Pine Script strategy. Walk me through adding it to a chart one step at a time, and wait for me to say "done" before you give the next step:
 
-1. Open a 1-minute MNQ1! chart.
+1. Open a 1-minute or 5-minute MNQ1! chart.
 2. Paste the script into the Pine Editor and add it to the chart.
 3. Open the Strategy Tester and explain what each number means.
 
