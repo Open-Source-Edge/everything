@@ -67,21 +67,63 @@ You can compute `d14_gamma_flip` pre-market for `$0/month` using a free brokerag
 
 ---
 
-## Copy-Paste AI Remix Prompt (Gemini 4 Neon)
+## Use It With AI (Gemini 4 Neon)
 
-```markdown
-Here's the Shield Battery (Long-Gamma Afternoon Drift) strategy (NinjaScript / PineScript).
+1. Go to [gemini.google.com](https://gemini.google.com) and sign in with a Google account.
+2. Pick **Gemini 4 Neon** from the model menu at the top. It needs a Google AI Pro plan, which has a free trial. The free model works too, just less sharp.
+3. Copy a prompt below and paste it into Gemini. For the first three, paste the strategy code underneath it (open the `.pine` or `.cs` file, click the copy icon). The website does this for you: https://open-source-edge.github.io/everything/#ai
 
-Do one of the following based on what I ask next:
-1. PORT: Translate this exact logic into [Python / Sierra Chart ACSIL / TradeStation EasyLanguage / QuantConnect] with zero lookahead (no map hacks), a 2.0x ATR(15m) hard stop, FOMC skip, and a 15:55 ET session flatten.
-2. STRESS-TEST: Write a Python validation script for my own futures + GEX CSV data that tests:
-   - 1-tick and 2-tick slippage per side plus realistic commissions
-   - Year-by-year net profit and max drawdown
-   - Opposite-regime placebo (Open < Gamma Flip)
-   - Time plateau (12:30, 12:45, 13:00, 13:15 ET) and stop plateau (1.5x to 2.5x ATR)
-   - Outlier check (strip the top 3 best days)
+**Explain it** (plain-English rules, the idea behind them and the risks)
 
-Don't optimize parameters to make the equity curve prettier. Tell me bluntly if it breaks.
+```text
+I'm new to trading. Below is the code for a futures trading strategy called Shield Battery. Explain it to me in plain English:
+
+1. What it trades and at what time of day.
+2. The exact rules for getting in and getting out.
+3. Why it might work, and what "dealer gamma" means here.
+4. What could go wrong, and roughly how much I could lose on a bad day trading 1 MNQ contract.
+
+Define every trading term the first time you use it. Keep it short.
+```
+
+**Set it up in TradingView**
+
+```text
+I'm new to TradingView. Below is a Pine Script strategy. Walk me through adding it to a chart one step at a time, and wait for me to say "done" before you give the next step:
+
+1. Open a 1-minute MNQ1! chart.
+2. Paste the script into the Pine Editor and add it to the chart.
+3. Open the Strategy Tester and explain what each number means.
+
+If I paste an error message, tell me what caused it and give me the fixed code.
+```
+
+**Set it up in NinjaTrader 8**
+
+```text
+I'm new to NinjaTrader 8. Below is a NinjaScript strategy. Walk me through using it one step at a time, and wait for me to say "done" before you give the next step:
+
+1. Create a new strategy in the NinjaScript Editor, paste this code and compile it.
+2. Backtest it in the Strategy Analyzer on MNQ 1-minute data.
+3. Run it on the Sim101 practice account only.
+
+If I paste a compile error, tell me what caused it and give me the fixed code. Never tell me to turn it on with real money.
+```
+
+**Test your own idea** (type your idea at the end)
+
+```text
+I'm going to describe a trading idea. Act as a skeptical research partner whose job is to find out whether it's real before I risk any money:
+
+1. Ask me who is forced to buy or sell, and why. If there's no clear reason, say so.
+2. Help me test it on years of data I did not use to build it.
+3. Include commissions and at least 1 tick of slippage on every entry and exit.
+4. Check that flipping the rule makes it worse, that nudging each setting up or down by a third still works, and that it survives removing the 3 best days. If it fails any of these, tell me it failed.
+5. Only if it survives, write it as a TradingView (Pine Script v6) and NinjaTrader 8 strategy with a hard stop and a 3:55 PM ET exit.
+
+Be blunt. Don't tweak settings to make the results look better.
+
+My idea:
 ```
 
 ---

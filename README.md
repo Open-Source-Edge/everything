@@ -47,41 +47,63 @@ Most retail trading folklore dies the second it gets scouted by 1-tick fills, re
 
 ---
 
-## Copy-Paste AI Quant Prompt (Gemini 4 Neon)
+## Use It With AI (Gemini 4 Neon)
 
-Use this prompt to stress-test your own build orders or translate any strategy in this repo into Python, Sierra Chart, TradeStation, or QuantConnect:
+1. Go to [gemini.google.com](https://gemini.google.com) and sign in with a Google account.
+2. Pick **Gemini 4 Neon** from the model menu at the top. It needs a Google AI Pro plan, which has a free trial. The free model works too, just less sharp.
+3. Copy a prompt below and paste it into Gemini. For the first three, paste the strategy code underneath it (open the `.pine` or `.cs` file, click the copy icon). The website does this for you: https://open-source-edge.github.io/everything/#ai
 
-```markdown
-You are my ruthless Institutional Quantitative Research Partner. Your job isn't to curve-fit a pretty equity curve. Your job is to protect my capital by trying to kill every trading idea I give you, and only keeping what survives strict validation.
+**Explain it** (plain-English rules, the idea behind them and the risks)
 
-### NON-NEGOTIABLE RESEARCH PROTOCOL
-Before writing strategy code, enforce these 7 rules:
+```text
+I'm new to trading. Below is the code for a futures trading strategy called Shield Battery. Explain it to me in plain English:
 
-1. Mechanism First (Macro > Micro):
-Force me to state who is forced to buy or sell and why (dealer gamma hedging, month-end pension rebalancing, leveraged-ETF 14:00 rebalance, Treasury auction spillover, volatility-target re-leveraging). Reject vague chart folklore unless framed as a falsifiable hypothesis.
+1. What it trades and at what time of day.
+2. The exact rules for getting in and getting out.
+3. Why it might work, and what "dealer gamma" means here.
+4. What could go wrong, and roughly how much I could lose on a bad day trading 1 MNQ contract.
 
-2. Strict 3-Way Temporal Split:
-- DEV: Build and freeze rules here only.
-- Locked OOS: Run once after freezing. Never tweak parameters based on OOS.
-- Virgin Holdout (Most Recent Year): Final untouched sanity check.
+Define every trading term the first time you use it. Keep it short.
+```
 
-3. Zero Lookahead / No Map Hacks:
-Every regime filter, volatility metric, gamma level, or cross-market signal must use strictly prior-close (T-1) or already-closed bar timestamps. Audit explicitly for subtle leaks.
+**Set it up in TradingView**
 
-4. Real Microstructure Friction:
-Include realistic commissions plus both 1 tick and 2 ticks of slippage per side. Flag if 1-tick friction plus commissions exceeds 5% of median stop distance. Reject bar-guess fills and require 1-tick or causal next-bar-open execution.
+```text
+I'm new to TradingView. Below is a Pine Script strategy. Walk me through adding it to a chart one step at a time, and wait for me to say "done" before you give the next step:
 
-5. Falsification Suite:
-- Control Baseline: Beat the unfiltered baseline.
-- Opposite-Direction Placebo: Flip the signal condition. It must degrade or turn negative.
-- Parameter Plateau (-33% / Base / +33%): Neighboring thresholds must stay profitable. Kill parameter cliffs.
-- Outlier Check: Strip the top 3 best days. If the edge disappears, reject it.
+1. Open a 1-minute MNQ1! chart.
+2. Paste the script into the Pine Editor and add it to the chart.
+3. Open the Strategy Tester and explain what each number means.
 
-6. Prop-Firm & Tail-Risk Stress Test:
-Evaluate worst day, max EOD and intraday drawdown, year-by-year consistency, and correlation to existing strategies. Never assume tight trailing stops, early breakeven stops, or hard daily profit caps help without proving it.
+If I paste an error message, tell me what caused it and give me the fixed code.
+```
 
-7. Production Dual-Code Output (Only for Survivors):
-Generate both NinjaTrader 8 (C# NinjaScript) and TradingView (PineScript v6) with hard stop-loss, session flatten (15:55 ET), and causal timestamps.
+**Set it up in NinjaTrader 8**
+
+```text
+I'm new to NinjaTrader 8. Below is a NinjaScript strategy. Walk me through using it one step at a time, and wait for me to say "done" before you give the next step:
+
+1. Create a new strategy in the NinjaScript Editor, paste this code and compile it.
+2. Backtest it in the Strategy Analyzer on MNQ 1-minute data.
+3. Run it on the Sim101 practice account only.
+
+If I paste a compile error, tell me what caused it and give me the fixed code. Never tell me to turn it on with real money.
+```
+
+**Test your own idea** (type your idea at the end)
+
+```text
+I'm going to describe a trading idea. Act as a skeptical research partner whose job is to find out whether it's real before I risk any money:
+
+1. Ask me who is forced to buy or sell, and why. If there's no clear reason, say so.
+2. Help me test it on years of data I did not use to build it.
+3. Include commissions and at least 1 tick of slippage on every entry and exit.
+4. Check that flipping the rule makes it worse, that nudging each setting up or down by a third still works, and that it survives removing the 3 best days. If it fails any of these, tell me it failed.
+5. Only if it survives, write it as a TradingView (Pine Script v6) and NinjaTrader 8 strategy with a hard stop and a 3:55 PM ET exit.
+
+Be blunt. Don't tweak settings to make the results look better.
+
+My idea:
 ```
 
 ---

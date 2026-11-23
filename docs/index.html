@@ -133,6 +133,23 @@
     summary:hover { color: var(--text); }
     pre { border-top: 1px solid var(--line); padding: 18px; max-height: 420px; overflow: auto; font-family: var(--mono); font-size: 13.5px; line-height: 1.6; color: #B4BDC9; background: #0C1016; border-radius: 0 0 8px 8px; }
 
+    /* AI section */
+    .steps { margin-top: 28px; list-style: none; display: grid; gap: 14px; }
+    .steps li { display: flex; gap: 16px; align-items: baseline; font-size: 18px; }
+    .steps .n { flex: none; width: 30px; height: 30px; border-radius: 50%; border: 1px solid var(--line-2); display: inline-flex; align-items: center; justify-content: center; font-family: var(--mono); font-size: 14px; color: var(--teal); transform: translateY(-2px); }
+    .steps a { color: var(--teal); text-decoration: none; }
+    .steps a:hover { text-decoration: underline; }
+    .steps b { font-weight: 600; }
+    .prompts { margin-top: 32px; list-style: none; border: 1px solid var(--line); border-radius: 12px; }
+    .prompts li { padding: 22px; border-top: 1px solid var(--line); display: grid; grid-template-columns: 1fr auto; gap: 8px 24px; align-items: center; }
+    .prompts li:first-child { border-top: 0; }
+    .prompts h3 { font-size: 21px; font-weight: 600; }
+    .prompts p { color: var(--muted); font-size: 16px; }
+    .prompts .actions { margin-top: 0; justify-content: flex-end; }
+    .prompts details { grid-column: 1 / -1; margin-top: 6px; }
+    .prompts pre { white-space: pre-wrap; font-size: 13.5px; max-height: none; }
+    .prompts pre + pre { border-radius: 0 0 8px 8px; }
+
     /* Graveyard */
     .grave { margin-top: 28px; list-style: none; }
     .grave li { display: grid; grid-template-columns: 220px 1fr; gap: 24px; padding: 22px 0; border-top: 1px solid var(--line); }
@@ -167,6 +184,9 @@
       .orders li { grid-template-columns: 34px 1fr; padding: 16px; gap: 12px; }
       .orders .status { grid-column: 2; }
       .grave li { grid-template-columns: 1fr; gap: 6px; }
+      .prompts li { grid-template-columns: 1fr; padding: 18px; }
+      .prompts .actions { justify-content: stretch; }
+      .steps li { font-size: 17px; }
       button.copy { flex: 1 1 100%; }
     }
   </style>
@@ -187,6 +207,7 @@
       <a class="sub" href="#shield-battery" data-spy="shield-battery">Shield Battery <span class="num">01</span></a>
       <a class="sub q" href="#orders">Stimpack <span class="num">02</span></a>
       <a class="sub q" href="#orders">Siege Tank <span class="num">03</span></a>
+      <a href="#ai" data-spy="ai">Use it with AI</a>
       <a href="#graveyard" data-spy="graveyard">Graveyard</a>
     </nav>
     <div class="side-foot">
@@ -256,7 +277,6 @@
         <div class="actions">
           <button class="copy primary" data-src="pine-src">Copy TradingView script</button>
           <button class="copy" data-src="cs-src">Copy NinjaTrader 8 strategy</button>
-          <button class="copy" data-src="prompt-src">Copy AI prompt</button>
         </div>
 
         <details>
@@ -1400,21 +1420,64 @@ namespace NinjaTrader.NinjaScript.Strategies.OpenSourceEdgeLgCore
 }
 // CORE-END</pre>
         </details>
-        <details>
-          <summary>AI research prompt</summary>
-          <pre class="mono" id="prompt-src">Here&#x27;s the Long-Gamma Afternoon Drift strategy (NinjaScript / PineScript).
+      </section>
 
-Do one of the following based on what I ask next:
-1. PORT: Translate this exact logic into [Python / Sierra Chart ACSIL / TradeStation EasyLanguage / QuantConnect] with zero lookahead, a 2.0x ATR(15m) hard stop, FOMC skip, and a 15:55 ET session flatten.
-2. STRESS-TEST: Write a Python validation script for my own futures + GEX CSV data that tests:
-   - 1-tick and 2-tick slippage per side plus realistic commissions
-   - Year-by-year net profit and max drawdown
-   - Opposite-regime placebo (Open &lt; Gamma Flip)
-   - Time plateau (12:30, 12:45, 13:00, 13:15 ET) and stop plateau (1.5x to 2.5x ATR)
-   - Outlier check (strip the top 3 best days)
+      <section id="ai">
+        <h2>Use it with AI</h2>
+        <p class="lead">Paste a prompt into Gemini to explain, set up or test a strategy.</p>
 
-Don&#x27;t optimize parameters to make the equity curve prettier. Tell me bluntly if it breaks.</pre>
-        </details>
+        <ol class="steps">
+          <li><span class="n">1</span><div>Go to <a href="https://gemini.google.com" target="_blank" rel="noopener">gemini.google.com</a> and sign in with a Google account.</div></li>
+          <li><span class="n">2</span><div>Pick <b>Gemini 4 Neon</b> from the model menu at the top. It needs a Google AI Pro plan, which has a free trial. The free model works too, just less sharp.</div></li>
+          <li><span class="n">3</span><div>Copy a prompt below, paste it into Gemini and press Enter. The strategy code is attached for you.</div></li>
+        </ol>
+
+        <ul class="prompts">
+          <li>
+            <div><h3>Explain it</h3><p>Plain-English rules, the idea behind them and the risks.</p></div>
+            <div class="actions"><button class="copy primary" data-src="p-explain" data-append="pine-src">Copy prompt</button></div>
+            <details><summary>See prompt</summary><pre class="mono" id="p-explain">I'm new to trading. Below is the code for a futures trading strategy called Shield Battery. Explain it to me in plain English:
+
+1. What it trades and at what time of day.
+2. The exact rules for getting in and getting out.
+3. Why it might work, and what "dealer gamma" means here.
+4. What could go wrong, and roughly how much I could lose on a bad day trading 1 MNQ contract.
+
+Define every trading term the first time you use it. Keep it short.</pre></details>
+          </li>
+          <li>
+            <div><h3>Set it up</h3><p>Step-by-step install and backtest, with error fixes.</p></div>
+            <div class="actions"><button class="copy" data-src="p-setup-tv" data-append="pine-src">Copy for TradingView</button><button class="copy" data-src="p-setup-nt" data-append="cs-src">Copy for NinjaTrader 8</button></div>
+            <details><summary>See prompts</summary><pre class="mono" id="p-setup-tv">I'm new to TradingView. Below is a Pine Script strategy. Walk me through adding it to a chart one step at a time, and wait for me to say "done" before you give the next step:
+
+1. Open a 1-minute MNQ1! chart.
+2. Paste the script into the Pine Editor and add it to the chart.
+3. Open the Strategy Tester and explain what each number means.
+
+If I paste an error message, tell me what caused it and give me the fixed code.</pre><pre class="mono" id="p-setup-nt">I'm new to NinjaTrader 8. Below is a NinjaScript strategy. Walk me through using it one step at a time, and wait for me to say "done" before you give the next step:
+
+1. Create a new strategy in the NinjaScript Editor, paste this code and compile it.
+2. Backtest it in the Strategy Analyzer on MNQ 1-minute data.
+3. Run it on the Sim101 practice account only.
+
+If I paste a compile error, tell me what caused it and give me the fixed code. Never tell me to turn it on with real money.</pre></details>
+          </li>
+          <li>
+            <div><h3>Test your own idea</h3><p>Paste it, then type your idea at the end.</p></div>
+            <div class="actions"><button class="copy" data-src="p-idea">Copy prompt</button></div>
+            <details><summary>See prompt</summary><pre class="mono" id="p-idea">I'm going to describe a trading idea. Act as a skeptical research partner whose job is to find out whether it's real before I risk any money:
+
+1. Ask me who is forced to buy or sell, and why. If there's no clear reason, say so.
+2. Help me test it on years of data I did not use to build it.
+3. Include commissions and at least 1 tick of slippage on every entry and exit.
+4. Check that flipping the rule makes it worse, that nudging each setting up or down by a third still works, and that it survives removing the 3 best days. If it fails any of these, tell me it failed.
+5. Only if it survives, write it as a TradingView (Pine Script v6) and NinjaTrader 8 strategy with a hard stop and a 3:55 PM ET exit.
+
+Be blunt. Don't tweak settings to make the results look better.
+
+My idea:</pre></details>
+          </li>
+        </ul>
       </section>
 
       <section id="graveyard">
@@ -1464,7 +1527,9 @@ Don&#x27;t optimize parameters to make the equity curve prettier. Tell me bluntl
     document.querySelectorAll("button.copy").forEach(function (btn) {
       var label = btn.textContent;
       btn.addEventListener("click", function () {
-        copyText(document.getElementById(btn.dataset.src).textContent).then(function () {
+        var text = document.getElementById(btn.dataset.src).textContent;
+        if (btn.dataset.append) text += "\n\n```\n" + document.getElementById(btn.dataset.append).textContent + "\n```";
+        copyText(text).then(function () {
           btn.textContent = "Copied"; btn.classList.add("done");
           setTimeout(function () { btn.textContent = label; btn.classList.remove("done"); }, 1600);
         });
@@ -1474,7 +1539,7 @@ Don&#x27;t optimize parameters to make the equity curve prettier. Tell me bluntl
     // Highlight the sidebar link for the section in view
     var links = {};
     document.querySelectorAll(".side-nav a[data-spy]").forEach(function (a) { links[a.dataset.spy] = a; });
-    var targets = ["top", "orders", "shield-battery", "graveyard"].map(function (id) { return document.getElementById(id); });
+    var targets = ["top", "orders", "shield-battery", "ai", "graveyard"].map(function (id) { return document.getElementById(id); });
     function spy() {
       var current = "top";
       targets.forEach(function (el) { if (el.id !== "top" && el.getBoundingClientRect().top < window.innerHeight * 0.35) current = el.id; });
