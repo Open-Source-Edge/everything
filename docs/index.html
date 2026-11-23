@@ -100,6 +100,9 @@
     }
 
     .side-nav a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       padding: 8px 11px;
       border-radius: 7px;
       font-size: 15px;
@@ -110,6 +113,37 @@
     }
     .side-nav a:hover { color: var(--text); background: rgba(255, 255, 255, 0.03); }
     .side-nav a.active { color: var(--text); background: var(--surface); }
+
+    .nav-group {
+      margin: 8px 0;
+      padding: 8px 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .nav-group-parent { color: var(--text) !important; }
+    .nav-group-parent .nav-idx {
+      font-family: var(--mono);
+      font-size: 12px;
+      color: var(--dim);
+    }
+    .nav-group-parent.active .nav-idx { color: var(--teal); }
+    .nav-children {
+      display: flex;
+      flex-direction: column;
+      gap: 1px;
+      padding-left: 14px;
+    }
+    .nav-children a {
+      padding: 6px 11px;
+      font-size: 14px;
+      font-weight: 400;
+      color: var(--dim);
+    }
+    .nav-children a:hover { color: var(--muted); }
+    .nav-children a.active { color: var(--text); background: var(--surface); font-weight: 500; }
 
     .side-foot {
       margin-top: auto;
@@ -179,6 +213,20 @@
       line-height: 1.12;
       font-weight: 700;
       letter-spacing: -0.01em;
+    }
+
+    .sub-sec {
+      margin-top: 44px;
+      scroll-margin-top: 24px;
+    }
+    .sub-sec h3 {
+      font-size: 22px;
+      line-height: 1.2;
+      font-weight: 600;
+    }
+    .sub-sec .lead {
+      font-size: 15.5px;
+      margin-top: 4px;
     }
 
     .sec-tag {
@@ -701,9 +749,13 @@
 
     <nav class="side-nav" id="side-nav">
       <a href="#top" data-spy="top">Overview</a>
-      <a href="#shield-battery" data-spy="shield-battery">Shield Battery</a>
-      <a href="#backtest" data-spy="backtest">Backtest</a>
-      <a href="#code" data-spy="code">Code</a>
+      <div class="nav-group">
+        <a class="nav-group-parent" href="#shield-battery" data-spy="shield-battery"><span>Shield Battery</span><span class="nav-idx">01</span></a>
+        <div class="nav-children">
+          <a href="#backtest" data-spy="backtest">Backtest</a>
+          <a href="#code" data-spy="code">Code</a>
+        </div>
+      </div>
       <a href="#ai" data-spy="ai">Use with AI</a>
       <a href="#orders" data-spy="orders">Build Orders</a>
       <a href="#graveyard" data-spy="graveyard">Graveyard</a>
@@ -776,11 +828,10 @@
             <p>2x 15m ATR stop. Flat at 3:55 PM ET.</p>
           </div>
         </div>
-      </section>
 
-      <section id="backtest">
-        <h2>Backtest</h2>
-        <p class="lead">1 MNQ, 2019–2026. Includes 1-tick slippage and $1.24 round-trip fees.</p>
+        <div class="sub-sec" id="backtest">
+          <h3>Backtest</h3>
+          <p class="lead">1 MNQ, 2019–2026. Includes 1-tick slippage and $1.24 round-trip fees.</p>
 
         <div class="stat-strip">
           <div><span class="sv up">+$9,711</span><span class="sl">Net profit</span></div>
@@ -879,11 +930,11 @@
             </div>
           </div>
         </div>
-      </section>
+        </div>
 
-      <section id="code">
-        <h2>Code</h2>
-        <p class="lead">Copy into TradingView or NinjaTrader 8.</p>
+        <div class="sub-sec" id="code">
+          <h3>Code</h3>
+          <p class="lead">Copy into TradingView or NinjaTrader 8.</p>
 
         <div class="panel">
           <div class="panel-bar">
@@ -2056,6 +2107,7 @@ namespace NinjaTrader.NinjaScript.Strategies.OpenSourceEdgeLgCore
               <button class="link-btn" type="button" data-expand="cs-src">Expand</button>
             </div>
           </div>
+        </div>
         </div>
       </section>
 
